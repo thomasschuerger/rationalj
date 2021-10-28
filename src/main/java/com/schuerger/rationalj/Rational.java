@@ -20,46 +20,35 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 /**
- * Implements an immutable arbitrary-scale rational number based on BigInteger. The rational numbers are always normalized, which means that they are
- * stored completely reduced, the denominator is always positive (which means the sign is in the numerator only), and the number 0 always has
- * denominator 1. The API is similar to the one from BigInteger.
+ * Implements an immutable arbitrary-scale rational number based on BigInteger numerators and denominators. The rational numbers are always
+ * normalized, which means that they are stored completely reduced, the denominator is always positive (which means the sign is in the numerator
+ * only), and the number 0 always has denominator 1. The API is similar to the one from BigInteger. Implements most of BigInteger's methods, but none
+ * of its bitwise methods.
  *
  * @author Thomas Schuerger
  */
 
 public class Rational extends Number implements Comparable<Rational> {
     /** Ten. */
-    public static Rational TEN = new Rational(BigInteger.TEN, BigInteger.ONE);
+    public static final Rational TEN = new Rational(BigInteger.TEN, BigInteger.ONE);
 
     /** Two. */
-    public static Rational TWO = new Rational(2, 1);
+    public static final Rational TWO = new Rational(2, 1);
 
     /** One. */
-    public static Rational ONE = new Rational(BigInteger.ONE, BigInteger.ONE);
+    public static final Rational ONE = new Rational(BigInteger.ONE, BigInteger.ONE);
 
     /** One half. */
-    public static Rational ONE_HALF = new Rational(1, 2);
+    public static final Rational ONE_HALF = new Rational(1, 2);
 
     /** Zero. */
-    public static Rational ZERO = new Rational(BigInteger.ZERO, BigInteger.ONE);
-
-    /** Minus one half. */
-    public static Rational MINUS_ONE_HALF = new Rational(-1, 2);
-
-    /** Minus one. */
-    public static Rational MINUS_ONE = new Rational(-1, 1);
-
-    /** Minus two. */
-    public static Rational MINUS_TWO = new Rational(-2, 1);
-
-    /** Minus ten. */
-    public static Rational MINUS_TEN = new Rational(-10, 1);
+    public static final Rational ZERO = new Rational(BigInteger.ZERO, BigInteger.ONE);
 
     /** The numerator. */
     private final BigInteger numerator;
 
     /** The denominator (always >= 1). */
-    private BigInteger denominator;
+    private final BigInteger denominator;
 
     /** True iff this Rational is an integer. */
     private final boolean isInteger;
@@ -73,7 +62,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /**
      * Creates a Rational from the given numerator and denominator.
      *
-     * @param numerator   the numerator
+     * @param numerator the numerator
      * @param denominator the denominator
      */
     private Rational(int numerator, int denominator) {
@@ -83,7 +72,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /**
      * Creates a Rational from the given numerator and denominator.
      *
-     * @param numerator   the numerator
+     * @param numerator the numerator
      * @param denominator the denominator
      */
     private Rational(long numerator, long denominator) {
@@ -93,7 +82,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /**
      * Creates a Rational from the given numerator and denominator.
      *
-     * @param numerator   the numerator
+     * @param numerator the numerator
      * @param denominator the denominator
      */
     private Rational(BigInteger numerator, BigInteger denominator) {
@@ -122,19 +111,19 @@ public class Rational extends Number implements Comparable<Rational> {
             this.numerator = numerator;
             this.denominator = denominator;
         } else {
+            // make the numerator and denominator co-prime
             this.numerator = numerator.divide(gcd);
             this.denominator = denominator.divide(gcd);
         }
 
         if (this.denominator.equals(BigInteger.ONE)) {
             this.isInteger = true;
+            // numerator can't be zero
+            this.isZero = false;
             if (numerator.equals(BigInteger.ONE)) {
                 this.isOne = true;
-                this.isZero = false;
             } else {
-                // numerator can't be zero
                 this.isOne = false;
-                this.isZero = false;
             }
         } else {
             this.isInteger = false;
@@ -144,32 +133,47 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Creates an integer Rational from the given integer.
+     * Returns the numerator of this Rational.
      *
-     * @param integer the integer
+     * @return the numerator
      */
-    private Rational(int integer) {
-        this(integer, 1);
+    public BigInteger numerator() {
+        return numerator;
     }
 
     /**
-     * Creates an integer Rational from the given long.
+     * Returns the denominator of this Rational.
      *
-     * @param integer the long
+     * @return the denominator
      */
-    private Rational(long integer) {
-        this(integer, 1L);
+    public BigInteger denominator() {
+        return denominator;
+    }
+
+    public static Rational of(String string) {
+        int p = string.indexOf('/');
+
+        if (p < 0) {
+            return Rational.of(new BigInteger(string));
+        } else {
+            int p2 = string.lastIndexOf('/');
+
+            if (p == p2) {
+                return Rational.of(new BigInteger(string.substring(0, p)), new BigInteger(string.substring(p + 1)));
+            } else {
+                throw new IllegalArgumentException("Zero or one '/' expected");
+            }
+        }
     }
 
     /**
-     * Creates an integer Rational from the given integer.
+     * Returns a Rational based on the given numerator and denominator.
      *
-     * @param integer the integer
+     * @param numerator the numerator
+     * @param denominator the denominator
+     *
+     * @return the Rational
      */
-    private Rational(BigInteger integer) {
-        this(integer, BigInteger.ONE);
-    }
-
     public static Rational of(int numerator, int denominator) {
         if (denominator == 0) {
             throw new IllegalArgumentException("denominator must be non-zero");
@@ -182,6 +186,14 @@ public class Rational extends Number implements Comparable<Rational> {
         }
     }
 
+    /**
+     * Returns a Rational based on the given numerator and denominator.
+     *
+     * @param numerator the numerator
+     * @param denominator the denominator
+     *
+     * @return the Rational
+     */
     public static Rational of(long numerator, long denominator) {
         if (denominator == 0) {
             throw new IllegalArgumentException("denominator must be non-zero");
@@ -194,6 +206,14 @@ public class Rational extends Number implements Comparable<Rational> {
         }
     }
 
+    /**
+     * Returns a Rational based on the given numerator and denominator.
+     *
+     * @param numerator the numerator
+     * @param denominator the denominator
+     *
+     * @return the Rational
+     */
     public static Rational of(BigInteger numerator, BigInteger denominator) {
         if (denominator.equals(BigInteger.ZERO)) {
             throw new IllegalArgumentException("denominator must be non-zero");
@@ -206,20 +226,72 @@ public class Rational extends Number implements Comparable<Rational> {
         }
     }
 
+    /**
+     * Returns an integer Rational based on the given integer.
+     *
+     * @param integer the integer
+     *
+     * @return the Rational
+     */
     public static Rational of(int integer) {
-        return valueOf(integer);
+        switch (integer) {
+        case 0:
+            return ZERO;
+        case 1:
+            return ONE;
+        case 2:
+            return TWO;
+        case 10:
+            return TEN;
+        default:
+            return new Rational(integer, 1);
+        }
     }
 
+    /**
+     * Returns an integer Rational based on the given integer.
+     *
+     * @param integer the integer
+     *
+     * @return the Rational
+     */
     public static Rational of(long integer) {
-        return valueOf(integer);
+        if (integer == 0) {
+            return ZERO;
+        } else if (integer == 1) {
+            return ONE;
+        } else if (integer == 2) {
+            return TWO;
+        } else if (integer == 10) {
+            return TEN;
+        } else {
+            return new Rational(integer, 1L);
+        }
     }
 
+    /**
+     * Returns an integer Rational based on the given integer.
+     *
+     * @param integer the integer
+     *
+     * @return the Rational
+     */
     public static Rational of(BigInteger integer) {
-        return valueOf(integer);
+        if (integer.equals(BigInteger.ZERO)) {
+            return ZERO;
+        } else if (integer.equals(BigInteger.ONE)) {
+            return ONE;
+        } else if (integer.equals(BigInteger.TEN)) {
+            return TEN;
+        } else {
+            return new Rational(integer, BigInteger.ONE);
+        }
     }
 
     /**
      * Returns true if this Rational is an integer, false otherwise.
+     *
+     * @return true or false
      */
     public boolean isInteger() {
         return isInteger;
@@ -303,6 +375,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents this Rational plus the given other Rational.
      *
      * @param other the other rational
+     *
      * @return the sum of this and other
      */
     public Rational add(Rational other) {
@@ -311,9 +384,9 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (other.isZero) {
             return this;
         } else if (isInteger && other.isInteger) {
-            return new Rational(numerator.add(other.numerator));
+            return Rational.of(numerator.add(other.numerator));
         } else {
-            return new Rational(numerator.multiply(other.denominator).add(denominator.multiply(other.numerator)),
+            return Rational.of(numerator.multiply(other.denominator).add(denominator.multiply(other.numerator)),
                     denominator.multiply(other.denominator));
         }
     }
@@ -322,6 +395,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents this Rational minus the given other Rational.
      *
      * @param other the other rational
+     *
      * @return the difference of this and other
      */
     public Rational subtract(Rational other) {
@@ -332,9 +406,9 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (equals(other)) {
             return ZERO;
         } else if (isInteger && other.isInteger) {
-            return new Rational(numerator.subtract(other.numerator));
+            return Rational.of(numerator.subtract(other.numerator));
         } else {
-            return new Rational(numerator.multiply(other.denominator).subtract(denominator.multiply(other.numerator)),
+            return Rational.of(numerator.multiply(other.denominator).subtract(denominator.multiply(other.numerator)),
                     denominator.multiply(other.denominator));
         }
     }
@@ -343,6 +417,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents this Rational multiplied by the given other Rational.
      *
      * @param other the other rational
+     *
      * @return the product of this and other
      */
     public Rational multiply(Rational other) {
@@ -355,7 +430,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (numerator.equals(other.denominator) && denominator.equals(other.numerator)) {
             return ONE;
         } else {
-            return new Rational(numerator.multiply(other.numerator), denominator.multiply(other.denominator));
+            return Rational.of(numerator.multiply(other.numerator), denominator.multiply(other.denominator));
         }
     }
 
@@ -363,6 +438,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents this Rational divided by the given other Rational.
      *
      * @param other the other rational (must not be 0)
+     *
      * @return the quotient of this and other
      */
     public Rational divide(Rational other) {
@@ -375,7 +451,70 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (equals(other)) {
             return ONE;
         } else {
-            return new Rational(numerator.multiply(other.denominator), denominator.multiply(other.numerator));
+            return Rational.of(numerator.multiply(other.denominator), denominator.multiply(other.numerator));
+        }
+    }
+
+    /**
+     * Returns a BigInteger that represents the integer part when dividing this Rational by the given other Rational.
+     *
+     * @param other the other rational (must not be 0)
+     *
+     * @return the quotient of this and other
+     */
+    public BigInteger divideInteger(Rational other) {
+        if (other.isZero) {
+            throw new IllegalArgumentException("Division by zero");
+        } else if (isZero) {
+            return BigInteger.ZERO;
+        } else if (equals(other)) {
+            return BigInteger.ONE;
+        } else if (isInteger) {
+            if (other.isOne) {
+                return numerator;
+            } else if (other.isInteger) {
+                return numerator.divide(other.numerator);
+            } else {
+                return numerator.multiply(other.denominator).divide(other.numerator);
+            }
+        } else if (other.isInteger) {
+            return numerator.divide(other.numerator.multiply(denominator));
+        } else {
+            return numerator.multiply(other.denominator).divide(other.numerator.multiply(denominator));
+        }
+    }
+
+    /**
+     * Returns an array that contains a BigInteger in its first element representing the integer part when dividing this Rational by the given other
+     * Rational and the remainder as a Rational in its second element.
+     *
+     * @param other the other rational (must not be 0)
+     *
+     * @return an Object array with a BigInteger and a Rational
+     */
+    public Number[] divideIntegerAndRemainder(Rational other) {
+        if (other.isZero) {
+            throw new IllegalArgumentException("Division by zero");
+        } else if (isZero) {
+            return new Number[] { BigInteger.ZERO, ZERO };
+        } else if (equals(other)) {
+            return new Number[] { BigInteger.ONE, ZERO };
+        } else if (isInteger) {
+            if (other.isOne) {
+                return new Number[] { numerator, ZERO };
+            } else if (other.isInteger) {
+                BigInteger[] result = numerator.divideAndRemainder(other.numerator);
+                return new Number[] { result[0], Rational.of(result[1]) };
+            } else {
+                BigInteger[] result = numerator.multiply(other.denominator).divideAndRemainder(other.numerator);
+                return new Number[] { result[0], Rational.of(result[1], other.numerator) };
+            }
+        } else if (other.isInteger) {
+            BigInteger[] result = numerator.divideAndRemainder(other.numerator.multiply(denominator));
+            return new Number[] { result[0], Rational.of(result[1], denominator.multiply(other.numerator)) };
+        } else {
+            BigInteger[] result = numerator.multiply(other.denominator).divideAndRemainder(other.numerator.multiply(denominator));
+            return new Number[] { result[0], Rational.of(result[1], denominator.multiply(other.numerator)) };
         }
     }
 
@@ -389,7 +528,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns the negation of this Rational.
+     * Returns a Rational that represents the negation of this Rational.
      *
      * @return the negation
      */
@@ -397,7 +536,20 @@ public class Rational extends Number implements Comparable<Rational> {
         if (isZero) {
             return this;
         } else {
-            return new Rational(numerator.negate(), denominator);
+            return Rational.of(numerator.negate(), denominator);
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the absolute value of this Rational.
+     *
+     * @return the negation
+     */
+    public Rational abs() {
+        if (isZero || signum() > 0) {
+            return this;
+        } else {
+            return negate();
         }
     }
 
@@ -412,7 +564,37 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (isOne) {
             return ONE;
         } else {
-            return new Rational(denominator, numerator);
+            return Rational.of(denominator, numerator);
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the minimum of this Rational and the given other Rational.
+     *
+     * @param other the other Rational
+     *
+     * @return the minimum of the two Rationals
+     */
+    public Rational min(Rational other) {
+        if (compareTo(other) < 0) {
+            return this;
+        } else {
+            return other;
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the maximum of this Rational and the given other Rational.
+     *
+     * @param other the other Rational
+     *
+     * @return the maximum of the two Rationals
+     */
+    public Rational max(Rational other) {
+        if (compareTo(other) < 0) {
+            return other;
+        } else {
+            return this;
         }
     }
 
@@ -435,6 +617,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns this Rational to the given integer power. Not both of the Rational and the power must be 0.
      *
      * @param power the power
+     *
      * @return the power'th power
      */
     public Rational pow(int power) {
@@ -444,16 +627,49 @@ public class Rational extends Number implements Comparable<Rational> {
             } else {
                 return ONE;
             }
+        } else if (isZero) {
+            return ZERO;
+        } else if (isOne) {
+            return ONE;
         } else if (power == 1) {
             return this;
         } else if (power == 2) {
-            return multiply(this);
+            return square();
+        } else if (power == 3) {
+            return square().multiply(this);
+        } else if (power == 4) {
+            return square().square();
         } else if (power == -1) {
             return reciprocal();
         } else if (power < 0) {
-            return new Rational(denominator.pow(-power), numerator.pow(-power));
+            return Rational.of(denominator.pow(-power), numerator.pow(-power));
         } else {
-            return new Rational(numerator.pow(power), denominator.pow(power));
+            return Rational.of(numerator.pow(power), denominator.pow(power));
+        }
+    }
+
+    /**
+     * Returns a Rational representing the greatest common divisor (GCD) of this Rational and the given other Rational. Returns 0 if both Rationals
+     * are 0.
+     *
+     * @param other the other Rational
+     *
+     * @return the GCD of this and the other Rational
+     */
+    public Rational gcd(Rational other) {
+        if (this.equals(other)) {
+            return this;
+        } else if (isZero) {
+            return other;
+        } else if (isOne) {
+            return Rational.of(BigInteger.ONE, other.denominator);
+        } else if (other.isZero) {
+            return this;
+        } else if (other.isOne) {
+            return Rational.of(BigInteger.ONE, this.denominator);
+        } else {
+            return Rational.of(numerator.multiply(other.denominator).gcd(denominator.multiply(other.numerator)),
+                    denominator.multiply(other.denominator));
         }
     }
 
@@ -461,68 +677,45 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational representing the integer.
      *
      * @param integer the integer
+     *
+     * @return the Rational
      */
     public static Rational valueOf(int integer) {
-        switch (integer) {
-        case 0:
-            return ZERO;
-        case 1:
-            return ONE;
-        case 2:
-            return TWO;
-        case 10:
-            return TEN;
-        case -1:
-            return MINUS_ONE;
-        case -2:
-            return MINUS_TWO;
-        case -10:
-            return MINUS_TEN;
-        default:
-            return new Rational(integer);
-        }
+        return Rational.of(integer);
     }
 
     /**
      * Returns a Rational representing the long.
      *
      * @param integer the long
+     *
+     * @return the Rational
      */
     public static Rational valueOf(long integer) {
-        if (integer == 0) {
-            return ZERO;
-        } else if (integer == 1) {
-            return ONE;
-        } else if (integer == 2) {
-            return TWO;
-        } else if (integer == 10) {
-            return TEN;
-        } else if (integer == -1) {
-            return MINUS_ONE;
-        } else if (integer == -2) {
-            return MINUS_TWO;
-        } else if (integer == -10) {
-            return MINUS_TEN;
-        } else {
-            return new Rational(integer);
-        }
+        return Rational.of(integer);
     }
 
     /**
      * Returns a Rational representing the integer.
      *
      * @param integer the integer
+     *
+     * @return the Rational
      */
     public static Rational valueOf(BigInteger integer) {
-        if (integer.equals(BigInteger.ZERO)) {
-            return ZERO;
-        } else if (integer.equals(BigInteger.ONE)) {
-            return ONE;
-        } else if (integer.equals(BigInteger.TEN)) {
-            return TEN;
-        } else {
-            return new Rational(integer);
-        }
+        return Rational.of(integer);
+    }
+
+    /**
+     * Returns a Rational of the given string. The string is expected to be of the form "<number>" or "<numerator>/<denominator>", where all
+     * placeholders are integers.
+     *
+     * @param string the string
+     *
+     * @return the Rational
+     */
+    public static Rational valueOf(String string) {
+        return Rational.of(string);
     }
 
     @Override
@@ -554,6 +747,6 @@ public class Rational extends Number implements Comparable<Rational> {
 
     @Override
     public int compareTo(Rational other) {
-        return numerator.multiply(other.denominator).subtract(denominator.multiply(other.numerator)).signum();
+        return numerator.multiply(other.denominator).compareTo(denominator.multiply(other.numerator));
     }
 }
