@@ -6,8 +6,8 @@ Rational numbers are implemented by the class `Rational`. Like for `Integer`, `B
 
 Rationals are automatically normalized:
 
-- numerators and denominators are changed to be co-prime (fully reduced)
-- denominators are never negative
+- numerators and denominators are always co-prime (fully reduced)
+- denominators are always positive
 - zero uses an enumerator of 0 and a denominator of 1 
 
 Therefore, two Rationals are equal if and only if their enumerators are equal and their denominators are equal.
@@ -58,6 +58,32 @@ Integer Rationals are available via
 - `max(Rational other) - Rational`
 - `min(Rational other) - Rational`
 - `pow(int power) - Rational`
+
+# Build
+
+Run
+
+```bash
+mvn clean install
+```
+
+# Integrate
+
+## Maven
+
+```xml
+<dependency>
+    <groupId>com.schuerger.util</groupId>
+    <artifactId>rationalj</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+## Gradle
+
+```gradle
+implementation 'com.schuerger.util:rationalj:1.0.0'
+```
 
 # Example
 

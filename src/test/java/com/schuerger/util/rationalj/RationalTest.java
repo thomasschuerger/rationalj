@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.schuerger.rationalj;
+package com.schuerger.util.rationalj;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
+
+import com.schuerger.util.rationalj.Rational;
 
 class RationalTest {
 
