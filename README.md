@@ -20,16 +20,24 @@ Author: Thomas Schuerger (thomas@schuerger.com)
 
 RationalJ is licensed under the Apache License 2.0. See file [LICENSE](LICENSE) for details.
 
+# Prerequisites
+
+Java 8 or later is required.
+
+# Dependencies
+
+No external dependencies are required.
+
 # Usage
 
-Rationals can be created as follows:
+Arbitrary Rationals can be created as follows:
 
 - `Rational.of(int numerator, int denominator)`
 - `Rational.of(long numerator, long denominator)`
 - `Rational.of(BigInteger numerator, BigInteger denominator)`
 - `Rational.of(String string)` (using "`<numerator>/<denominator>`", e.g. "`-431/214`")
 
-Integer Rationals are available via
+Integer Rationals can be created as follows:
 
 - `Rational.of(int integer)`
 - `Rational.of(long integer)`
@@ -54,10 +62,10 @@ Integer Rationals are available via
 - `divide(Rational other) - Rational`
 - `divideInteger(Rational other) - BigInteger`
 - `divideIntegerAndRemainder(Rational other) - {BigInteger, Rational}`
-- `gcd(Rational other) - Rational`
-- `max(Rational other) - Rational`
-- `min(Rational other) - Rational`
 - `pow(int power) - Rational`
+- `gcd(Rational other) - Rational`
+- `min(Rational other) - Rational`
+- `max(Rational other) - Rational`
 
 # Build
 
