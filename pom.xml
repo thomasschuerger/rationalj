@@ -36,7 +36,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/thomasschuerger/rationalj.git</connection>
-        <developerConnection>scm:git:ssh://github.com:thomasschuerger/rationalj.git</developerConnection>
+        <developerConnection>scm:git:git://github.com:thomasschuerger/rationalj.git</developerConnection>
         <url>https://github.com/thomasschuerger/rationalj</url>
     </scm>
 
