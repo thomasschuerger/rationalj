@@ -121,13 +121,13 @@ Output:
 31710869445015912176908843526535027555643447320787267779096898248431156738548305814867560678144006224158425966541000436701189187481211772088720561290395499/11665776930493019085212404857033337561339496033047702683574120486902199999153739451117682997019564785781712240103402969781398151364608000000000000000000000 = 2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274
 ```
 
-## Calculate sum of Egyptian fractions
+## Determine Egyptian fraction of a rational number
 
 ```java
-// every positive rational number can be expressed as a finite sum of unique unit fractions (fractions of the form 1/n)
+// every positive rational number can be expressed as a finite sum of distinct unit fractions (fractions of the form 1/n)
 // for example: 9/11 = 1/2 + 1/4 + 1/15 + 1/660
 
-// the following will find a sequence of unique unit fractions that sums to a positive target rational
+// the following will find a sequence of distinct unit fractions that sums to a positive target rational
 
 // we do this by keeping a sum of unit fractions and in each iteration we find the largest unused unit
 // fraction that does not let the sum exceed the target
