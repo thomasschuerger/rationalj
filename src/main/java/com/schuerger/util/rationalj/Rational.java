@@ -698,9 +698,15 @@ public class Rational extends Number implements Comparable<Rational> {
         return Rational.of(string);
     }
 
+    /**
+     * Returns a string representation of this Rational. For integers, the string just contains the integer value. For non-integers, the string
+     * consists of the numerator, followed by a slash, followed by the denominator.
+     *
+     * @return the string representation
+     */
     @Override
     public String toString() {
-        if (denominator.equals(BigInteger.ONE)) {
+        if (isInteger) {
             return numerator.toString();
         } else {
             return numerator.toString() + '/' + denominator;
