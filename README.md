@@ -124,13 +124,14 @@ Output:
 ## Determine Egyptian fraction of a rational number
 
 ```java
-// every positive rational number can be expressed as a finite sum of distinct unit fractions (fractions of the form 1/n)
-// for example: 9/11 = 1/2 + 1/4 + 1/15 + 1/660
+// every positive rational number can be expressed as a finite sum of distinct unit fractions
+// (fractions of the form 1/n); for example: 9/11 = 1/2 + 1/4 + 1/15 + 1/660
 
-// the following will find a sequence of distinct unit fractions that sums to a positive target rational
+// the following will find a sequence of distinct unit fractions that sums to a positive
+// target rational
 
-// we do this by keeping a sum of unit fractions and in each iteration we find the largest unused unit
-// fraction that does not let the sum exceed the target
+// we do this by keeping a sum of unit fractions and in each iteration we find the largest
+// unused unit fraction that does not let the sum exceed the target
 
 Rational target = Rational.of(47, 29);
 Rational sum = Rational.ZERO;
