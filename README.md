@@ -28,6 +28,10 @@ Java 8 or later is required.
 
 No external dependencies are required.
 
+# Changelog
+
+The changelog is maintained in the file [CHANGELOG.md](CHANGELOG.md).
+
 # Usage
 
 Arbitrary `Rational`s can be created as follows:
