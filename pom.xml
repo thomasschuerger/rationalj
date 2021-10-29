@@ -6,7 +6,7 @@
 
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.0.0-RC1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>RationalJ</name>
