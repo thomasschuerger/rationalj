@@ -6,7 +6,7 @@
 
     <groupId>com.schuerger.util</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-RC1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RationalJ</name>
@@ -36,7 +36,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/thomasschuerger/rationalj.git</connection>
-        <developerConnection>scm:git:git://github.com:thomasschuerger/rationalj.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:thomasschuerger/rationalj.git</developerConnection>
         <url>https://github.com/thomasschuerger/rationalj</url>
     </scm>
 
@@ -45,6 +45,10 @@
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
     <properties>
