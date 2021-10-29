@@ -26,7 +26,11 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-import com.schuerger.util.rationalj.Rational;
+/**
+ * Tests for the class Rational.
+ *
+ * @author Thomas Schuerger (thomas@schuerger.com)
+ */
 
 class RationalTest {
 

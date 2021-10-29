@@ -25,7 +25,7 @@ import java.math.RoundingMode;
  * only), and the number 0 always has denominator 1. The API is similar to the one from BigInteger. Implements most of BigInteger's methods, but none
  * of its bitwise methods.
  *
- * @author Thomas Schuerger
+ * @author Thomas Schuerger (thomas@schuerger.com)
  */
 
 public class Rational extends Number implements Comparable<Rational> {
@@ -33,13 +33,13 @@ public class Rational extends Number implements Comparable<Rational> {
     public static final Rational TEN = new Rational(BigInteger.TEN, BigInteger.ONE);
 
     /** Two. */
-    public static final Rational TWO = new Rational(2, 1);
+    public static final Rational TWO = new Rational(BigInteger.valueOf(2), BigInteger.ONE);
 
     /** One. */
     public static final Rational ONE = new Rational(BigInteger.ONE, BigInteger.ONE);
 
     /** One half. */
-    public static final Rational ONE_HALF = new Rational(1, 2);
+    public static final Rational ONE_HALF = new Rational(BigInteger.ONE, BigInteger.valueOf(2));
 
     /** Zero. */
     public static final Rational ZERO = new Rational(BigInteger.ZERO, BigInteger.ONE);
@@ -47,7 +47,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /** The numerator. */
     private final BigInteger numerator;
 
-    /** The denominator (always >= 1). */
+    /** The denominator (always greater than 0). */
     private final BigInteger denominator;
 
     /** True iff this Rational is an integer. */
@@ -58,26 +58,6 @@ public class Rational extends Number implements Comparable<Rational> {
 
     /** True iff this Rational is one. */
     private final boolean isOne;
-
-    /**
-     * Creates a Rational from the given numerator and denominator.
-     *
-     * @param numerator the numerator
-     * @param denominator the denominator
-     */
-    private Rational(int numerator, int denominator) {
-        this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
-    }
-
-    /**
-     * Creates a Rational from the given numerator and denominator.
-     *
-     * @param numerator the numerator
-     * @param denominator the denominator
-     */
-    private Rational(long numerator, long denominator) {
-        this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
-    }
 
     /**
      * Creates a Rational from the given numerator and denominator.
@@ -182,7 +162,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (numerator == denominator) {
             return ONE;
         } else {
-            return new Rational(numerator, denominator);
+            return new Rational(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
         }
     }
 
@@ -202,7 +182,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (numerator == denominator) {
             return ONE;
         } else {
-            return new Rational(numerator, denominator);
+            return new Rational(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
         }
     }
 
@@ -244,7 +224,7 @@ public class Rational extends Number implements Comparable<Rational> {
         case 10:
             return TEN;
         default:
-            return new Rational(integer, 1);
+            return new Rational(BigInteger.valueOf(integer), BigInteger.ONE);
         }
     }
 
@@ -265,7 +245,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (integer == 10) {
             return TEN;
         } else {
-            return new Rational(integer, 1L);
+            return new Rational(BigInteger.valueOf(integer), BigInteger.ONE);
         }
     }
 
@@ -707,7 +687,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a Rational of the given string. The string is expected to be of the form "<number>" or "<numerator>/<denominator>", where all
+     * Returns a Rational of the given string. The string is expected to be of the form "[number]" or "[numerator]/[denominator]", where all
      * placeholders are integers.
      *
      * @param string the string
