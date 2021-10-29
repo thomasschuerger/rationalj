@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.schuerger.util.rationalj;
+package com.schuerger.math.rationalj;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
