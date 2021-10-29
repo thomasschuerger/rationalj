@@ -1,6 +1,6 @@
 # RationalJ
 
-RationalJ is a light-weight Java library for rational numbers. The library manages rationals using arbitrary integer precision for enumerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1.
+RationalJ is a light-weight Java library for rational numbers. The library manages rationals using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1.
 
 Rational numbers are implemented by the class `Rational`. Like for `Integer`, `BigInteger` and `BigDecimal`, instances of `Rational` are immutable. Operations on `Rational`s do not modify the `Rational`s but return `Rational`s or other types as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations that `BigInteger` offers.
 
@@ -8,9 +8,9 @@ Rational numbers are implemented by the class `Rational`. Like for `Integer`, `B
 
 - numerators and denominators are always co-prime (fully reduced)
 - denominators are always positive
-- zero uses an enumerator of 0 and a denominator of 1 
+- zero uses an numerator of 0 and a denominator of 1 
 
-Therefore, two `Rational`s are equal if and only if their enumerators are equal and their denominators are equal.
+Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal.
 
 Rational offers no public constructors to allow minimizing the amount of instances created. `Rational`s are retrieved via `Rational.of(...)` or `Rational.valueOf(...)` instead.
 
@@ -85,7 +85,7 @@ mvn clean install
 
 ```xml
 <dependency>
-    <groupId>com.schuerger.util</groupId>
+    <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -94,7 +94,7 @@ mvn clean install
 ## Gradle
 
 ```gradle
-implementation 'com.schuerger.util:rationalj:1.0.0'
+implementation 'com.schuerger.math:rationalj:1.0.0'
 ```
 
 # Examples
