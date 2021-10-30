@@ -1,18 +1,18 @@
 # RationalJ
 
-RationalJ is a light-weight Java library for rational numbers. The library manages rationals using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1.
+RationalJ is a light-weight Java library for rational numbers. The library manages rational numbers using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1.
 
-Rational numbers are implemented by the class `Rational`. Like for `Integer`, `BigInteger` and `BigDecimal`, instances of `Rational` are immutable. Operations on `Rational`s do not modify the `Rational`s but return `Rational`s or other types as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations that `BigInteger` offers.
+Rational numbers are implemented by the class `Rational`. Like for `Integer`, `BigInteger` and `BigDecimal`, instances of `Rational` are immutable. Operations on `Rational`s do not modify the `Rational`s but return `Rational`s or other types (like `BigInteger` or `int`) as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations or prime number methods that `BigInteger` offers.
 
-`Rational`s are automatically normalized:
+Upon creation, `Rational`s are automatically normalized:
 
-- numerators and denominators are always co-prime (fully reduced)
-- denominators are always positive
-- zero uses an numerator of 0 and a denominator of 1 
+- numerators and denominators are always made co-prime (making the `Rational` fully reduced)
+- denominators are always made positive
+- zero uses a numerator of 0 and a denominator of 1 
 
 Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal.
 
-Rational offers no public constructors to allow minimizing the amount of instances created. `Rational`s are retrieved via `Rational.of(...)` or `Rational.valueOf(...)` instead.
+Rational offers no public constructors to allow minimizing the amount of instances created by being able to return `Rational`s from a pool of constants. Instead, `Rational`s are retrieved via `Rational.of(...)`.
 
 Author: Thomas Schuerger (thomas@schuerger.com)
 
@@ -105,11 +105,11 @@ The following Java code calculates a rational approximation to Euler's number e,
 
 ```java
 Rational sum = Rational.ZERO;
-Rational factorial = Rational.ONE;
+Rational invFactorial = Rational.ONE;
 
 for (int i = 0; i < 100; i++) {
-    sum = sum.add(factorial);
-    factorial = factorial.divide(Rational.of(i + 1));
+    sum = sum.add(invFactorial);
+    invFactorial = invFactorial.divide(Rational.of(i + 1));
 }
 
 System.out.println(sum + " = " + sum.toDecimal());
@@ -132,6 +132,8 @@ Output:
 
 // we do this by keeping a sum of unit fractions and in each iteration we find the largest
 // unused unit fraction that does not let the sum exceed the target
+
+// the first n terms (n >= 0) of the sequence are always the partial sum of a harmonic number
 
 Rational target = Rational.of(47, 29);
 Rational sum = Rational.ZERO;
@@ -161,4 +163,4 @@ k:    105  sum: 1.620634920634920634920634920635 1021/630
 k:  18270  sum: 1.620689655172413793103448275862 47/29
 ```
 
-Now we know that 47/29 = 1 + 1/2 + 1/9 + 1/105 + 1/18270.
+Now we know that 47/29 = 1/1 + 1/2 + 1/9 + 1/105 + 1/18270.
