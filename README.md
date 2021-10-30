@@ -24,6 +24,8 @@ RationalJ is licensed under the Apache License 2.0. See file [LICENSE](LICENSE) 
 
 Java 8 or later is required.
 
+The library would also work with Java 5, but the unit tests currently require Java 8. Note that even Java 8 is already pretty old (released 2014).
+
 # Dependencies
 
 No external dependencies are required.
@@ -65,7 +67,7 @@ Integer `Rational`s can be created as follows:
 - `multiply(Rational other) - Rational`
 - `divide(Rational other) - Rational`
 - `divideInteger(Rational other) - BigInteger`
-- `divideIntegerAndRemainder(Rational other) - {BigInteger, Rational}`
+- `divideIntegerAndRemainder(Rational other) - Number[] {BigInteger, Rational}`
 - `pow(int power) - Rational`
 - `gcd(Rational other) - Rational`
 - `min(Rational other) - Rational`
