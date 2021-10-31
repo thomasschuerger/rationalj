@@ -735,4 +735,46 @@ public class Rational extends Number implements Comparable<Rational> {
     public int compareTo(Rational other) {
         return numerator.multiply(other.denominator).compareTo(denominator.multiply(other.numerator));
     }
+
+    /**
+     * Sanity-checks this Rational. Throws a RuntimeException if the sanity check fails, otherwise does nothing.
+     */
+    protected void check() {
+        if (numerator == null) {
+            throw new RuntimeException("numerator is null: " + toDetailString());
+        }
+
+        if (denominator == null) {
+            throw new RuntimeException("denominator is null: " + toDetailString());
+        }
+
+        if (!numerator.gcd(denominator).equals(BigInteger.ONE)) {
+            throw new RuntimeException("numerator and denominator are not co-prime: " + toDetailString());
+        }
+
+        if (isInteger ^ denominator.equals(BigInteger.ONE)) {
+            throw new RuntimeException("isInteger is wrong: " + toDetailString());
+        }
+
+        if (isOne ^ (isInteger && numerator.equals(BigInteger.ONE))) {
+            throw new RuntimeException("isOne is wrong: " + toDetailString());
+        }
+
+        if (isZero ^ numerator.equals(BigInteger.ZERO)) {
+            throw new RuntimeException("isZero is wrong: " + toDetailString());
+        }
+
+        if (isZero && !denominator.equals(BigInteger.ONE)) {
+            throw new RuntimeException("0 does not have denominator 1: " + toDetailString());
+        }
+    }
+
+    /**
+     * Returns all fields of this Rational as a string.
+     *
+     * @return the string
+     */
+    protected String toDetailString() {
+        return "numerator=" + numerator + ", denominator=" + denominator + ", isInteger=" + isInteger + ", isZero=" + isZero + ", isOne=" + isOne;
+    }
 }

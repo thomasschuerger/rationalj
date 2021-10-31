@@ -16,7 +16,6 @@
 package com.schuerger.math.rationalj;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -336,7 +335,7 @@ class RationalTest {
 
     @Test
     void testLongValue() {
-        assertEquals(0L, Rational.ZERO.intValue());
+        assertEquals(0L, Rational.ZERO.longValue());
         assertEquals(1L, Rational.ONE.longValue());
         assertEquals(7L, Rational.of(77, 10).longValue());
         assertEquals(-7L, Rational.of(-77, 10).longValue());
@@ -472,6 +471,28 @@ class RationalTest {
                 new BigInteger(
                         "7128865274665093053166384155714272920668358861885893040452001991154324087581111499476444151913871586911717817019575256512980264067621009251465871004305131072686268143200196609974862745937188343705015434452523739745298963145674982128236956232823794011068809262317708861979540791247754558049326475737829923352751796735248042463638051137034331214781746850878453485678021888075373249921995672056932029099390891687487672697950931603520000")),
                 sum);
+    }
+
+    /**
+     * Like assertEquals(...), but does a sanity check on both arguments first.
+     *
+     * @param expected the expected Rational
+     * @param actual the actual Rational
+     */
+    private static void assertEquals(Rational expected, Rational actual) {
+        expected.check();
+        actual.check();
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
+    }
+
+    /**
+     * Delegates to org.junit.jupiter.api.Assertions.assertEquals(...).
+     *
+     * @param expected the expected Object
+     * @param actual the actual Object
+     */
+    private static void assertEquals(Object expected, Object actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
     }
 
 }
