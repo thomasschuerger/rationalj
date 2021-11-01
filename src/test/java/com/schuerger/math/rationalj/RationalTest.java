@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,12 +61,19 @@ class RationalTest {
         assertEquals(Rational.of(5, 7), Rational.valueOf("5/7"));
         assertEquals(Rational.of(5, 7), Rational.of("-5/-7"));
         assertEquals(Rational.of(12345), Rational.of("12345"));
+        assertEquals(Rational.MINUS_ONE, Rational.of(-1));
+        assertEquals(Rational.MINUS_ONE, Rational.of(-1, 1));
+        assertEquals(Rational.MINUS_ONE, Rational.of(-1L));
+        assertEquals(Rational.MINUS_ONE, Rational.of(-1L, 1L));
+        assertEquals(Rational.MINUS_ONE, Rational.of(BigInteger.valueOf(-1)));
+        assertEquals(Rational.MINUS_ONE, Rational.of(BigInteger.valueOf(-1), BigInteger.ONE));
         assertEquals(Rational.ONE, Rational.of(7, 7));
         assertEquals(Rational.ONE, Rational.of(7L, 7L));
         assertEquals(Rational.ONE, Rational.of(BigInteger.valueOf(7), BigInteger.valueOf(7)));
         assertEquals(Rational.ZERO, Rational.of(0));
         assertEquals(Rational.ZERO, Rational.of(0L));
         assertEquals(Rational.ZERO, Rational.valueOf(BigInteger.ZERO));
+        assertEquals(Rational.ZERO, Rational.of(BigInteger.ZERO, BigInteger.TEN));
         assertEquals(Rational.ONE, Rational.valueOf(1));
         assertEquals(Rational.ONE, Rational.valueOf(1L));
         assertEquals(Rational.ONE, Rational.of(BigInteger.ONE));
@@ -121,6 +129,8 @@ class RationalTest {
 
     @Test
     void testAdd() {
+        assertEquals(Rational.of(1), Rational.of(-3).add(Rational.of(4)));
+        assertEquals(Rational.of(1), Rational.of(1, 2).add(Rational.of(1, 2)));
         assertEquals(Rational.of(37, 21), Rational.of(3, 7).add(Rational.of(4, 3)));
         assertEquals(Rational.ZERO, Rational.of(-4, 3).add(Rational.of(4, 3)));
         assertEquals(Rational.of(4, 3), Rational.ZERO.add(Rational.of(4, 3)));
@@ -158,6 +168,7 @@ class RationalTest {
     void testSquare() {
         assertEquals(Rational.ZERO, Rational.ZERO.square());
         assertEquals(Rational.ONE, Rational.ONE.square());
+        assertEquals(Rational.ONE, Rational.of(-1).square());
         assertEquals(Rational.of(169, 36), Rational.of(13, 6).square());
         assertEquals(Rational.of(169, 36), Rational.of(-13, 6).square());
     }
@@ -222,8 +233,32 @@ class RationalTest {
 
         assertEquals(Rational.ONE, Rational.ONE.reciprocal());
         assertEquals(Rational.ONE_HALF, Rational.TWO.reciprocal());
+        assertEquals(Rational.of(2, 1), Rational.of(1, 2).reciprocal());
+        assertEquals(Rational.of(1, 2), Rational.of(2, 1).reciprocal());
+        assertEquals(Rational.of(-2, 1), Rational.of(-1, 2).reciprocal());
         assertEquals(Rational.of(1, -2), Rational.of(-2, 1).reciprocal());
         assertEquals(Rational.of(13, 5), Rational.of(5, 13).reciprocal());
+        assertEquals(Rational.of(5, 13), Rational.of(13, 5).reciprocal());
+        assertEquals(Rational.of(-13, 5), Rational.of(-5, 13).reciprocal());
+        assertEquals(Rational.of(-5, 13), Rational.of(-13, 5).reciprocal());
+    }
+
+    @Test
+    void testIsReciprocalOf() {
+        assertFalse(Rational.of(0).isReciprocalOf(Rational.of(0)));
+        assertFalse(Rational.of(3, 7).isReciprocalOf(Rational.of(0)));
+        assertFalse(Rational.of(0).isReciprocalOf(Rational.of(3, 7)));
+        assertFalse(Rational.of(-3, 7).isReciprocalOf(Rational.of(0)));
+        assertFalse(Rational.of(0).isReciprocalOf(Rational.of(-3, 7)));
+        assertFalse(Rational.of(19, 8).isReciprocalOf(Rational.of(19, 8)));
+        assertTrue(Rational.of(19, 8).isReciprocalOf(Rational.of(8, 19)));
+        assertTrue(Rational.of(-19, 8).isReciprocalOf(Rational.of(-8, 19)));
+        assertFalse(Rational.of(-19, 8).isReciprocalOf(Rational.of(-9, 19)));
+        assertFalse(Rational.of(-19, 8).isReciprocalOf(Rational.of(-8, 18)));
+        assertFalse(Rational.of(19, 8).isReciprocalOf(Rational.of(-8, 19)));
+        assertFalse(Rational.of(-19, 8).isReciprocalOf(Rational.of(8, 19)));
+        assertTrue(Rational.of(1, 5).isReciprocalOf(Rational.of(5)));
+        assertTrue(Rational.of(5).isReciprocalOf(Rational.of(1, 5)));
     }
 
     @Test
@@ -241,8 +276,24 @@ class RationalTest {
     void testNegate() {
         assertEquals(Rational.of(0), Rational.of(0).negate());
         assertEquals(Rational.of(1), Rational.of(-1).negate());
+        assertEquals(Rational.of(-1), Rational.of(1).negate());
         assertEquals(Rational.of(7L, 17L), Rational.of(-7, 17).negate());
         assertEquals(Rational.of(5L, 1L), Rational.of(-5, 1).negate());
+    }
+
+    @Test
+    void testIsNegationOf() {
+        assertTrue(Rational.of(0).isNegationOf(Rational.of(0)));
+        assertFalse(Rational.of(0).isNegationOf(Rational.of(3, 2)));
+        assertFalse(Rational.of(3, 2).isNegationOf(Rational.of(0)));
+        assertTrue(Rational.of(4, 7).isNegationOf(Rational.of(-4, 7)));
+        assertTrue(Rational.of(-4, 7).isNegationOf(Rational.of(4, 7)));
+        assertFalse(Rational.of(4, 7).isNegationOf(Rational.of(4, 7)));
+        assertFalse(Rational.of(-4, 7).isNegationOf(Rational.of(-4, 7)));
+        assertFalse(Rational.of(3, 7).isNegationOf(Rational.of(4, 7)));
+        assertFalse(Rational.of(3, 6).isNegationOf(Rational.of(3, 7)));
+        assertFalse(Rational.of(-3, 7).isNegationOf(Rational.of(4, 7)));
+        assertFalse(Rational.of(-3, 6).isNegationOf(Rational.of(3, 7)));
     }
 
     @Test
@@ -275,17 +326,24 @@ class RationalTest {
     @Test
     void testPow() {
         assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.pow(0));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.pow(-1));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.pow(-2));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.pow(-25));
 
         assertEquals(Rational.ZERO, Rational.ZERO.pow(1));
         assertEquals(Rational.ZERO, Rational.ZERO.pow(2));
         assertEquals(Rational.ZERO, Rational.ZERO.pow(17));
         assertEquals(Rational.ONE, Rational.ONE.pow(0));
+        assertEquals(Rational.ONE, Rational.MINUS_ONE.pow(0));
         assertEquals(Rational.ONE, Rational.ONE.pow(1));
+        assertEquals(Rational.MINUS_ONE, Rational.MINUS_ONE.pow(1));
         assertEquals(Rational.TWO, Rational.TWO.pow(1));
         assertEquals(Rational.ONE, Rational.ONE.pow(2));
         assertEquals(Rational.ONE, Rational.ONE.pow(17));
         assertEquals(Rational.of(289, 81), Rational.of(17L, 9L).pow(2));
+        assertEquals(Rational.of(289, 81), Rational.of(-17L, 9L).pow(2));
         assertEquals(Rational.of(4913, 729), Rational.of(17L, 9L).pow(3));
+        assertEquals(Rational.of(-4913, 729), Rational.of(-17L, 9L).pow(3));
         assertEquals(Rational.of(83521, 6561), Rational.of(17L, 9L).pow(4));
         assertEquals(Rational.of(1419857, 59049), Rational.of(17L, 9L).pow(5));
         assertEquals(Rational.of(456, 123), Rational.of(123, 456).pow(-1));
@@ -323,6 +381,11 @@ class RationalTest {
         assertTrue(Math.abs(Rational.of(-77, 10).toDecimal().doubleValue() - new BigDecimal("-7.7").doubleValue()) < 0.0000001);
         assertTrue(Math.abs(Rational.of(12345678, 100).toDecimal().doubleValue() - new BigDecimal("123456.78").doubleValue()) < 0.0000001);
         assertTrue(Math.abs(Rational.of(-12345678, 100).toDecimal().doubleValue() - new BigDecimal("-123456.78").doubleValue()) < 0.0000001);
+
+        assertEquals("0.14285", Rational.of(1, 7).toDecimal(5, RoundingMode.DOWN).toString());
+        assertEquals("0.142857142857", Rational.of(1, 7).toDecimal(12, RoundingMode.DOWN).toString());
+        assertEquals("0.89361702127659574468085106382978723404255319148936", Rational.of(42, 47).toDecimal(50, RoundingMode.DOWN).toString());
+        assertEquals("4711", Rational.of(4711).toDecimal(50, RoundingMode.DOWN).toString());
     }
 
     @Test
@@ -357,6 +420,24 @@ class RationalTest {
         assertTrue(Math.abs(Rational.of(-77, 10).floatValue() - new BigDecimal("-7.7").floatValue()) < 0.0000001);
         assertTrue(Math.abs(Rational.of(12345678, 100).floatValue() - new BigDecimal("123456.78").floatValue()) < 0.0000001);
         assertTrue(Math.abs(Rational.of(-12345678, 100).floatValue() - new BigDecimal("-123456.78").floatValue()) < 0.0000001);
+    }
+
+    @Test
+    void testCheck() {
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.ONE, BigInteger.ZERO, 1, true, true).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.ONE, BigInteger.valueOf(-1), -1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(8), BigInteger.valueOf(4), 1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(1), BigInteger.valueOf(1), 1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(7), BigInteger.valueOf(1), -1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(7), BigInteger.valueOf(1), 0, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(-7), BigInteger.valueOf(1), 1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(-7), BigInteger.valueOf(1), 0, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(0), BigInteger.valueOf(1), 1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(0), BigInteger.valueOf(1), -1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(0), BigInteger.valueOf(1), 0, false, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(1), BigInteger.valueOf(2), 1, true, false).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(1), BigInteger.valueOf(1), 0, true, true).check());
+        assertThrows(RuntimeException.class, () -> new Rational(BigInteger.valueOf(0), BigInteger.valueOf(1), 1, true, false).check());
     }
 
     @Test
@@ -470,6 +551,21 @@ class RationalTest {
                 "53362913282294785045591045624042980409652472280384260097101349248456268889497101757506097901985035691409088731550468098378442172117885009464302344326566022502100278425632852081405544941210442510142672770294774712708917963967779610453224692426866468888281582071984897105110796873249319155529397017508931564519976085734473014183284011724412280649074307703736683170055800293659235088589360235285852808160759574737836655413175508131522517"),
                 new BigInteger(
                         "7128865274665093053166384155714272920668358861885893040452001991154324087581111499476444151913871586911717817019575256512980264067621009251465871004305131072686268143200196609974862745937188343705015434452523739745298963145674982128236956232823794011068809262317708861979540791247754558049326475737829923352751796735248042463638051137034331214781746850878453485678021888075373249921995672056932029099390891687487672697950931603520000")),
+                sum);
+    }
+
+    @Test
+    void testLn2() {
+        // approximate ln(2) using the 1000th partial sum of the alternating Harmonic series
+
+        Rational sum = Rational.ZERO;
+
+        for (int i = 1; i <= 1000; i++) {
+            sum = sum.add(Rational.of((i % 2) > 0 ? 1 : -1, i));
+        }
+
+        assertEquals(Rational.of(
+                "4937790215303904379625531938825779946100713125770473348897738659941095286866450943449698645388475442704066094104875369365939573941321907700818330906904692080097434687930193989481947211915390582175815541421224025307798265496347982662631751380933793540471517859473601783917361384214703881079292192008187313164050082034643619238257085294408414212863236104619096962528583819754790264673829998544542831721722741539798798387356122429364267/7128865274665093053166384155714272920668358861885893040452001991154324087581111499476444151913871586911717817019575256512980264067621009251465871004305131072686268143200196609974862745937188343705015434452523739745298963145674982128236956232823794011068809262317708861979540791247754558049326475737829923352751796735248042463638051137034331214781746850878453485678021888075373249921995672056932029099390891687487672697950931603520000"),
                 sum);
     }
 
