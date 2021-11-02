@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
-- isNegationOf(Rational other) - boolean
-- isReciprocalOf(Rational other) - boolean
-- toDecimal(int scale, RoundingMode roundingMode) - BigDecimal
+- `lcm(Rational other) - Rational`
+- `isNegationOf(Rational other) - boolean`
+- `isReciprocalOf(Rational other) - boolean`
+- `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
 
 ## [1.0.0] - 2021-10-29
 

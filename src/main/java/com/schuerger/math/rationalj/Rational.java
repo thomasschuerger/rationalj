@@ -762,8 +762,30 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (other.isOne) {
             return Rational.of(BigInteger.ONE, this.denominator);
         } else {
-            return Rational.of(numerator.multiply(other.denominator).gcd(denominator.multiply(other.numerator)),
-                    denominator.multiply(other.denominator));
+            // generic equation: gcd(a/b,c/d) = gcd(a*d,b*c)/(b*d)
+
+            // for gcd(a,b)=gcd(c,d)=1, this is faster especially for large numbers:
+            // gcd(a/b,c/d) = gcd(a,c)/lcm(b,d) = gcd(a,c)*gcd(b,d)/(b*d)
+            // it requires two GCD calculations, but the involved numbers are smaller
+            return Rational.of(numerator.gcd(other.numerator).multiply(denominator.gcd(other.denominator)), denominator.multiply(other.denominator));
+        }
+    }
+
+    /**
+     * Returns a Rational representing the least common multiple (LCM) of this Rational and the given other Rational. Returns zero if any of the two
+     * Rationals is zero.
+     *
+     * @param other the other Rational
+     *
+     * @return the LCM of this and the other Rational
+     */
+    public Rational lcm(Rational other) {
+        if (signum == 0 || other.signum == 0) {
+            return ZERO;
+        } else if (equals(other)) {
+            return this;
+        } else {
+            return reciprocal().gcd(other.reciprocal()).reciprocal();
         }
     }
 

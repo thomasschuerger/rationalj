@@ -363,6 +363,23 @@ class RationalTest {
         assertEquals(Rational.of(1, 80), Rational.of(255, 16).gcd(Rational.of(193, 5)));
         assertEquals(Rational.of(5, 4), Rational.of(55, 4).gcd(Rational.of(5, 4)));
         assertEquals(Rational.of(11, 12), Rational.of(55, 4).gcd(Rational.of(11, 6)));
+        assertEquals(Rational.of(1, 13), Rational.of(85, 17).gcd(Rational.of(217, 13)));
+    }
+
+    @Test
+    void testLcm() {
+        assertEquals(Rational.ZERO, Rational.ZERO.lcm(Rational.ZERO));
+        assertEquals(Rational.of(0), Rational.ZERO.lcm(Rational.of(3, 5)));
+        assertEquals(Rational.of(3), Rational.ONE.lcm(Rational.of(3, 5)));
+        assertEquals(Rational.of(0), Rational.of(3, 5).lcm(Rational.ZERO));
+        assertEquals(Rational.of(3), Rational.of(3, 5).lcm(Rational.ONE));
+        assertEquals(Rational.of(3, 5), Rational.of(3, 5).lcm(Rational.of(3, 5)));
+        assertEquals(Rational.of(6), Rational.of(3, 5).lcm(Rational.of(4, 6)));
+        assertEquals(Rational.of(117), Rational.of(-9, 4).lcm(Rational.of(13, 7)));
+        assertEquals(Rational.of(49215), Rational.of(255, 16).lcm(Rational.of(193, 5)));
+        assertEquals(Rational.of(55, 4), Rational.of(55, 4).lcm(Rational.of(5, 4)));
+        assertEquals(Rational.of(55, 2), Rational.of(55, 4).lcm(Rational.of(11, 6)));
+        assertEquals(Rational.of(1085), Rational.of(85, 17).lcm(Rational.of(217, 13)));
     }
 
     @Test
