@@ -133,9 +133,8 @@ Output:
 // target rational
 
 // we do this by keeping a sum of unit fractions and in each iteration we find the largest
-// unused unit fraction that does not let the sum exceed the target
-
-// the first n terms (n >= 0) of the sequence are always the partial sum of a harmonic number
+// unused unit fraction that does not let the sum exceed the target; this must eventually
+// end, but the denominators can grow very big when close to the target
 
 Rational target = Rational.of(47, 29);
 Rational sum = Rational.ZERO;
@@ -166,3 +165,8 @@ k:  18270  sum: 1.620689655172413793103448275862 47/29
 ```
 
 Now we know that 47/29 = 1/1 + 1/2 + 1/9 + 1/105 + 1/18270.
+
+# FAQ
+## Shouldn't the class be called BigRational instead of Rational?
+
+`BigRational` would indeed have been a better name to match the other `Big*` classes, but only if there were already a class called `Rational` working with smaller number types. Since there isn't, the shorter name was chosen.
