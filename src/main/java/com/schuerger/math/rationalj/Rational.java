@@ -29,23 +29,26 @@ import java.math.RoundingMode;
  */
 
 public class Rational extends Number implements Comparable<Rational> {
+    /** The serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /** Ten. */
-    public static final Rational TEN = new Rational(BigInteger.TEN, BigInteger.ONE);
+    public static final Rational TEN = new Rational(BigInteger.TEN);
 
     /** Two. */
-    public static final Rational TWO = new Rational(BigInteger.valueOf(2), BigInteger.ONE);
+    public static final Rational TWO = new Rational(BigInteger.valueOf(2));
 
     /** One. */
-    public static final Rational ONE = new Rational(BigInteger.ONE, BigInteger.ONE);
+    public static final Rational ONE = new Rational(BigInteger.ONE);
 
     /** One half. */
     public static final Rational ONE_HALF = new Rational(BigInteger.ONE, BigInteger.valueOf(2));
 
     /** Zero. */
-    public static final Rational ZERO = new Rational(BigInteger.ZERO, BigInteger.ONE);
+    public static final Rational ZERO = new Rational(BigInteger.ZERO);
 
     /** Minus one. */
-    public static final Rational MINUS_ONE = new Rational(BigInteger.valueOf(-1), BigInteger.ONE);
+    public static final Rational MINUS_ONE = new Rational(BigInteger.valueOf(-1));
 
     /** BigInteger minus one. */
     private static final BigInteger BI_MINUS_ONE = BigInteger.valueOf(-1);
@@ -64,6 +67,19 @@ public class Rational extends Number implements Comparable<Rational> {
 
     /** True if this Rational is equal to one. */
     private final boolean isOne;
+
+    /**
+     * Creates an integer Rational from the given integer.
+     *
+     * @param integer the integer
+     */
+    private Rational(BigInteger integer) {
+        this.numerator = integer;
+        this.denominator = BigInteger.ONE;
+        this.isInteger = true;
+        this.signum = integer.signum();
+        this.isOne = integer.equals(BigInteger.ONE);
+    }
 
     /**
      * Creates a Rational from the given numerator and denominator. Numerator and denominator are converted into canonical form. The denominator must
@@ -263,7 +279,7 @@ public class Rational extends Number implements Comparable<Rational> {
         case 10:
             return TEN;
         default:
-            return new Rational(BigInteger.valueOf(integer), BigInteger.ONE);
+            return new Rational(BigInteger.valueOf(integer));
         }
     }
 
@@ -286,7 +302,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (integer == 10) {
             return TEN;
         } else {
-            return new Rational(BigInteger.valueOf(integer), BigInteger.ONE);
+            return new Rational(BigInteger.valueOf(integer));
         }
     }
 
@@ -307,7 +323,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (integer.equals(BigInteger.TEN)) {
             return TEN;
         } else {
-            return new Rational(integer, BigInteger.ONE);
+            return new Rational(integer);
         }
     }
 
@@ -588,7 +604,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns true iff this Rational is the negation of the given other Rational.
+     * Returns true iff this Rational is the negation of the given other Rational. This is faster than retrieving the negation and comparing it.
      *
      * @param other the other Rational
      *
@@ -640,7 +656,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns true iff this Rational is the reciprocal of the given other Rational.
+     * Returns true iff this Rational is the reciprocal of the given other Rational. This is faster than retrieving the reciprocal and comparing it.
      *
      * @param other the other Rational
      *
@@ -735,6 +751,8 @@ public class Rational extends Number implements Comparable<Rational> {
             return square().square();
         } else if (power == -1) {
             return reciprocal();
+        } else if (power == -2) {
+            return reciprocal().square();
         } else if (power < 0) {
             return new Rational(denominator.pow(-power), numerator.pow(-power), power % 2 == 0 ? 1 : signum, numerator.equals(BigInteger.ONE), false);
         } else {
@@ -880,47 +898,49 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Sanity-checks this Rational. Throws a RuntimeException if the sanity check fails, otherwise does nothing.
+     * Sanity-checks this Rational. Throws an IllegalStateException if the sanity check fails, otherwise does nothing.
+     *
+     * @throws IllegalStateException if this Rational is in an illegal state
      */
     void check() {
         if (numerator == null) {
-            throw new RuntimeException("numerator is null: " + toDetailString());
+            throw new IllegalStateException("numerator is null: " + toDetailString());
         }
 
         if (denominator == null) {
-            throw new RuntimeException("denominator is null: " + toDetailString());
+            throw new IllegalStateException("denominator is null: " + toDetailString());
         }
 
         if (denominator.equals(BigInteger.ZERO)) {
-            throw new RuntimeException("denominator is 0: " + toDetailString());
+            throw new IllegalStateException("denominator is 0: " + toDetailString());
         }
 
         if (denominator.signum() <= 0) {
-            throw new RuntimeException("Denominator is not positive: " + toDetailString());
+            throw new IllegalStateException("Denominator is not positive: " + toDetailString());
         }
 
         if (!numerator.gcd(denominator).equals(BigInteger.ONE)) {
-            throw new RuntimeException("numerator and denominator are not co-prime: " + toDetailString());
+            throw new IllegalStateException("numerator and denominator are not co-prime: " + toDetailString());
         }
 
         if (signum != numerator.signum()) {
-            throw new RuntimeException("signum is wrong: " + toDetailString());
+            throw new IllegalStateException("signum is wrong: " + toDetailString());
         }
 
         if (isInteger ^ denominator.equals(BigInteger.ONE)) {
-            throw new RuntimeException("isInteger is wrong: " + toDetailString());
+            throw new IllegalStateException("isInteger is wrong: " + toDetailString());
         }
 
         if (isOne ^ (isInteger && numerator.equals(BigInteger.ONE))) {
-            throw new RuntimeException("isOne is wrong: " + toDetailString());
+            throw new IllegalStateException("isOne is wrong: " + toDetailString());
         }
 
         if ((signum == 0) ^ numerator.equals(BigInteger.ZERO)) {
-            throw new RuntimeException("isZero is wrong: " + toDetailString());
+            throw new IllegalStateException("isZero is wrong: " + toDetailString());
         }
 
         if (signum == 0 && !denominator.equals(BigInteger.ONE)) {
-            throw new RuntimeException("0 does not have denominator 1: " + toDetailString());
+            throw new IllegalStateException("0 does not have denominator 1: " + toDetailString());
         }
     }
 
