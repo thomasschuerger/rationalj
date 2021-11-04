@@ -1,18 +1,22 @@
 # RationalJ
 
-RationalJ is a light-weight Java library for rational numbers. The library manages rational numbers using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1.
+RationalJ is a lightweight Java library for rational numbers. It is lightweight because it has no external dependencies and as of now only consists of a single class.
+
+The library manages rational numbers using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1, which is indeed *big*.
 
 Rational numbers are implemented by the class `Rational`. Like for `Integer`, `BigInteger` and `BigDecimal`, instances of `Rational` are immutable. Operations on `Rational`s do not modify the `Rational`s but return `Rational`s or other types (like `BigInteger` or `int`) as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations or prime number methods that `BigInteger` offers.
 
-Upon creation, `Rational`s are automatically normalized:
+Upon creation, `Rational`s are automatically normalized and are stored in canonical form:
 
 - numerators and denominators are always made co-prime (making the `Rational` fully reduced)
-- denominators are always made positive
+- if denominators are negative, the sign of the numerator and denominator is switched
 - zero uses a numerator of 0 and a denominator of 1 
 
 Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal.
 
 Rational offers no public constructors to allow minimizing the amount of instances created by being able to return `Rational`s from a pool of constants. Instead, `Rational`s are retrieved via `Rational.of(...)`.
+
+Suggestions, ideas and feedback are welcome!
 
 Author: Thomas Schuerger (thomas@schuerger.com)
 
