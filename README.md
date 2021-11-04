@@ -4,11 +4,11 @@ RationalJ is a lightweight Java library for rational numbers. It is lightweight 
 
 The library manages rational numbers using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1, which is indeed *big*.
 
-Rational numbers are implemented by the class `Rational`. Like for `Integer`, `BigInteger` and `BigDecimal`, instances of `Rational` are immutable. Operations on `Rational`s do not modify the `Rational`s but return `Rational`s or other types (like `BigInteger` or `int`) as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations or prime number methods that `BigInteger` offers.
+Rational numbers are implemented by the class `Rational`, which extends `Number`. Like for `Integer`, `BigInteger` and `BigDecimal` (and other number classes), instances of `Rational` are immutable. Thus, operations on `Rational`s do not modify them but return `Rational`s or other types (like `BigInteger` or `int`) as results. `Rational` implements most of the arithmetic methods offered by `BigInteger`. It does not implement any of the bitwise operations or prime number methods that `BigInteger` offers.
 
-Upon creation, `Rational`s are automatically normalized and are stored in canonical form:
+Upon creation, `Rational`s are automatically brought into canonical form:
 
-- numerators and denominators are always made co-prime (making the `Rational` fully reduced)
+- numerators and denominators are always made coprime (making the `Rational` fully reduced)
 - if denominators are negative, the sign of the numerator and denominator is switched
 - zero uses a numerator of 0 and a denominator of 1 
 
@@ -40,6 +40,10 @@ The changelog is maintained in the file [CHANGELOG.md](CHANGELOG.md).
 
 # Usage
 
+> :warning: This documentation is based on the latest released version. Unreleased versions may differ.
+
+## Creating rationals
+
 Arbitrary `Rational`s can be created as follows:
 
 - `Rational.of(int numerator, int denominator)`
@@ -54,7 +58,7 @@ Integer `Rational`s can be created as follows:
 - `Rational.of(BigInteger integer)`
 - `Rational.of(String string)` (using "`<integer>`", e.g. "`247`")
 
-# Operators
+## Operators on rationals
 
 ### Unary operators
 

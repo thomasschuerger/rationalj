@@ -113,7 +113,7 @@ public class Rational extends Number implements Comparable<Rational> {
         BigInteger gcd = numerator.gcd(denominator);
 
         if (!gcd.equals(BigInteger.ONE)) {
-            // the numerator and denominator are not co-prime; make them co-prime by dividing by their GCD
+            // the numerator and denominator are not coprime; make them coprime by dividing by their GCD
             numerator = numerator.divide(gcd);
             denominator = denominator.divide(gcd);
         }
@@ -598,7 +598,7 @@ public class Rational extends Number implements Comparable<Rational> {
         } else if (numerator.equals(BI_MINUS_ONE)) {
             return ONE;
         } else {
-            // negation keeps numerator and denominator co-prime
+            // negation keeps numerator and denominator coprime
             return new Rational(numerator.negate(), denominator, -signum, isInteger, false);
         }
     }
@@ -641,13 +641,13 @@ public class Rational extends Number implements Comparable<Rational> {
     public Rational reciprocal() {
         switch (signum) {
         case -1:
-            // numerator and denominator stay co-prime for reciprocals
+            // numerator and denominator stay coprime for reciprocals
             return new Rational(denominator.negate(), numerator.negate(), signum, numerator.equals(BI_MINUS_ONE), false);
         case 1:
             if (isOne) {
                 return ONE;
             } else {
-                // numerator and denominator stay co-prime for reciprocals
+                // numerator and denominator stay coprime for reciprocals
                 return new Rational(denominator, numerator, signum, numerator.equals(BigInteger.ONE), false);
             }
         default:
@@ -920,7 +920,7 @@ public class Rational extends Number implements Comparable<Rational> {
         }
 
         if (!numerator.gcd(denominator).equals(BigInteger.ONE)) {
-            throw new IllegalStateException("numerator and denominator are not co-prime: " + toDetailString());
+            throw new IllegalStateException("numerator and denominator are not coprime: " + toDetailString());
         }
 
         if (signum != numerator.signum()) {
