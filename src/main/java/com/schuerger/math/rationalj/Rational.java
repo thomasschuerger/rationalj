@@ -47,11 +47,20 @@ public class Rational extends Number implements Comparable<Rational> {
     /** Zero. */
     public static final Rational ZERO = new Rational(BigInteger.ZERO);
 
+    /** Minus one half. */
+    public static final Rational MINUS_ONE_HALF = new Rational(BigInteger.ONE, BigInteger.valueOf(-2));
+
     /** Minus one. */
     public static final Rational MINUS_ONE = new Rational(BigInteger.valueOf(-1));
 
     /** BigInteger minus one. */
     private static final BigInteger BI_MINUS_ONE = BigInteger.valueOf(-1);
+
+    /** BigInteger two. */
+    private static final BigInteger BI_TWO = BigInteger.valueOf(2);
+
+    /** BigInteger minus two. */
+    private static final BigInteger BI_MINUS_TWO = BigInteger.valueOf(-2);
 
     /** The numerator. */
     private final BigInteger numerator;
@@ -487,6 +496,8 @@ public class Rational extends Number implements Comparable<Rational> {
             return other;
         } else if (other.isOne) {
             return this;
+        } else if (other.equals(TWO)) {
+            return redouble();
         } else if (isReciprocalOf(other)) {
             return ONE;
         } else {
@@ -510,6 +521,8 @@ public class Rational extends Number implements Comparable<Rational> {
             return this;
         } else if (equals(other)) {
             return ONE;
+        } else if (other.equals(TWO)) {
+            return halve();
         } else {
             return Rational.of(numerator.multiply(other.denominator), denominator.multiply(other.numerator));
         }
@@ -757,6 +770,54 @@ public class Rational extends Number implements Comparable<Rational> {
             return new Rational(denominator.pow(-power), numerator.pow(-power), power % 2 == 0 ? 1 : signum, numerator.equals(BigInteger.ONE), false);
         } else {
             return new Rational(numerator.pow(power), denominator.pow(power), power % 2 == 0 ? 1 : signum, isInteger, false);
+        }
+    }
+
+    /**
+     * Returns a Rational which is twice this Rational.
+     *
+     * @return twice of this Rational
+     */
+    public Rational redouble() {
+        if (signum == 0) {
+            return this;
+        } else if (denominator.testBit(0)) {
+            // denominator is odd
+            if (isOne) {
+                return TWO;
+            } else {
+                // double the numerator
+                return new Rational(numerator.shiftLeft(1), denominator, signum, isInteger, false);
+            }
+        } else if (equals(ONE_HALF)) {
+            return ONE;
+        } else {
+            // denominator is even: halve the denominator
+            return new Rational(numerator, denominator.shiftRight(1), signum, denominator.equals(BI_TWO), false);
+        }
+    }
+
+    /**
+     * Returns a Rational which is half of this Rational.
+     *
+     * @return half of this Rational
+     */
+    public Rational halve() {
+        if (signum == 0) {
+            return this;
+        } else if (numerator.testBit(0)) {
+            // numerator is odd
+            if (isOne) {
+                return ONE_HALF;
+            } else {
+                // double the denominator
+                return new Rational(numerator, denominator.shiftLeft(1), signum, false, false);
+            }
+        } else if (equals(TWO)) {
+            return ONE;
+        } else {
+            // numerator is even: halve the numerator
+            return new Rational(numerator.shiftRight(1), denominator, signum, denominator.equals(BigInteger.ONE), false);
         }
     }
 

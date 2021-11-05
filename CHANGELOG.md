@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+- `redouble() - Rational`
+- `halve() - Rational`
 - `lcm(Rational other) - Rational`
 - `isNegationOf(Rational other) - boolean`
 - `isReciprocalOf(Rational other) - boolean`
