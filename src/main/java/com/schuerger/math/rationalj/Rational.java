@@ -59,9 +59,6 @@ public class Rational extends Number implements Comparable<Rational> {
     /** BigInteger two. */
     private static final BigInteger BI_TWO = BigInteger.valueOf(2);
 
-    /** BigInteger minus two. */
-    private static final BigInteger BI_MINUS_TWO = BigInteger.valueOf(-2);
-
     /** The numerator. */
     private final BigInteger numerator;
 
@@ -588,6 +585,35 @@ public class Rational extends Number implements Comparable<Rational> {
         } else {
             BigInteger[] result = numerator.multiply(other.denominator).divideAndRemainder(other.numerator.multiply(denominator));
             return new Number[] { result[0], Rational.of(result[1], denominator.multiply(other.numerator)) };
+        }
+    }
+
+    /**
+     * Returns a Rational that represents this Rational modulo the other rational.
+     *
+     * @param other the other rational (must not be 0)
+     *
+     * @return this modulo other
+     */
+    public Rational mod(Rational other) {
+        if (other.signum == 0) {
+            throw new IllegalArgumentException("Division by zero");
+        } else if (signum == 0) {
+            return ZERO;
+        } else if (equals(other)) {
+            return ZERO;
+        } else if (isInteger) {
+            if (other.isOne) {
+                return ZERO;
+            } else if (other.isInteger) {
+                return Rational.of(numerator.mod(other.numerator));
+            }
+        }
+
+        if (signum == other.signum) {
+            return this.subtract(Rational.of(this.divideInteger(other)).multiply(other));
+        } else {
+            return this.subtract(Rational.of(this.divideInteger(other).subtract(BigInteger.ONE)).multiply(other));
         }
     }
 

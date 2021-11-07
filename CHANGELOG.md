@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `redouble() - Rational`
 - `halve() - Rational`
+- `mod(Rational other) - Rational`
 - `lcm(Rational other) - Rational`
 - `isNegationOf(Rational other) - boolean`
 - `isReciprocalOf(Rational other) - boolean`

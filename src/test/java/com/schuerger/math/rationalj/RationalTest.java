@@ -229,6 +229,24 @@ class RationalTest {
     }
 
     @Test
+    void testMod() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.of(7, 9).mod(Rational.ZERO));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.mod(Rational.ZERO));
+
+        assertEquals(Rational.ZERO, Rational.ZERO.mod(Rational.of(3, 5)));
+        assertEquals(Rational.ZERO, Rational.ONE.mod(Rational.ONE));
+        assertEquals(Rational.ZERO, Rational.TEN.mod(Rational.ONE));
+        assertEquals(Rational.of(4), Rational.TEN.mod(Rational.of(6)));
+        assertEquals(Rational.of(2, 9), Rational.TEN.mod(Rational.of(8, 9)));
+        assertEquals(Rational.of(4, 9), Rational.of(4, 9).mod(Rational.of(3, 5)));
+        assertEquals(Rational.of(7, 45), Rational.of(3, 5).mod(Rational.of(4, 9)));
+        assertEquals(Rational.of(26, 203), Rational.of(19, 7).mod(Rational.of(5, 29)));
+        assertEquals(Rational.of(-26, 203), Rational.of(-19, 7).mod(Rational.of(-5, 29)));
+        assertEquals(Rational.of(9, 203), Rational.of(-19, 7).mod(Rational.of(5, 29)));
+        assertEquals(Rational.of(-9, 203), Rational.of(19, 7).mod(Rational.of(-5, 29)));
+    }
+
+    @Test
     void testReciprocal() {
         assertThrows(IllegalArgumentException.class, () -> Rational.ZERO.reciprocal());
 
