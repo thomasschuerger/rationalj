@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `isNegationOf(Rational other) - boolean`
 - `isReciprocalOf(Rational other) - boolean`
 - `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
+- `toContinuedFraction() - BigInteger[]`
+- `ofContinuedFraction(BigInteger... integers) - Rational`
+
 
 ## [1.0.0] - 2021-10-29
 

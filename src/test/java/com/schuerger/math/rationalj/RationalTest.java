@@ -497,6 +497,76 @@ class RationalTest {
     }
 
     @Test
+    void testToContinuedFraction() {
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(0) }, Rational.of(0).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(1) }, Rational.of(1).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1) }, Rational.of(-1).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(7) }, Rational.of(7).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-7) }, Rational.of(-7).toContinuedFraction());
+
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(0), BigInteger.valueOf(2) }, Rational.of(1, 2).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1), BigInteger.valueOf(2) }, Rational.of(-1, 2).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(0), BigInteger.valueOf(3) }, Rational.of(1, 3).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1), BigInteger.valueOf(1), BigInteger.valueOf(2) },
+                Rational.of(-1, 3).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(0), BigInteger.valueOf(4) }, Rational.of(1, 4).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1), BigInteger.valueOf(1), BigInteger.valueOf(3) },
+                Rational.of(-1, 4).toContinuedFraction());
+
+        assertArrayEquals(new BigInteger[] { BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE,
+                BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE,
+                BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE,
+                BigInteger.valueOf(2) }, Rational.of(75025, 46368).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-2), BigInteger.valueOf(2), BigInteger.valueOf(1), BigInteger.ONE, BigInteger.ONE,
+                BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE,
+                BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE, BigInteger.ONE,
+                BigInteger.valueOf(2), }, Rational.of(-75025, 46368).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(3), BigInteger.valueOf(4), BigInteger.valueOf(12), BigInteger.valueOf(4) },
+                Rational.of(649, 200).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-4), BigInteger.valueOf(1), BigInteger.valueOf(3), BigInteger.valueOf(12),
+                BigInteger.valueOf(4) }, Rational.of(-649, 200).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.ZERO, BigInteger.valueOf(8), BigInteger.ONE, BigInteger.ONE, BigInteger.valueOf(4) },
+                Rational.of(9, 77).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1), BigInteger.valueOf(1), BigInteger.valueOf(7), BigInteger.ONE,
+                BigInteger.valueOf(1), BigInteger.valueOf(4) }, Rational.of(-9, 77).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.ZERO, BigInteger.valueOf(3), BigInteger.ONE, BigInteger.valueOf(242) },
+                Rational.of(243, 971).toContinuedFraction());
+        assertArrayEquals(new BigInteger[] { BigInteger.valueOf(-1), BigInteger.valueOf(1), BigInteger.valueOf(2), BigInteger.valueOf(1),
+                BigInteger.valueOf(242) }, Rational.of(-243, 971).toContinuedFraction());
+    }
+
+    @Test
+    void testOfContinuedFraction() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofContinuedFraction(new BigInteger[0]));
+
+        assertEquals(Rational.of(0), Rational.ofContinuedFraction(Rational.of(0).toContinuedFraction()));
+        assertEquals(Rational.of(1), Rational.ofContinuedFraction(Rational.of(1).toContinuedFraction()));
+        assertEquals(Rational.of(-1), Rational.ofContinuedFraction(Rational.of(-1).toContinuedFraction()));
+        assertEquals(Rational.of(17), Rational.ofContinuedFraction(Rational.of(17).toContinuedFraction()));
+        assertEquals(Rational.of(-17), Rational.ofContinuedFraction(Rational.of(-17).toContinuedFraction()));
+
+        assertEquals(Rational.of(1, 2), Rational.ofContinuedFraction(Rational.of(1, 2).toContinuedFraction()));
+        assertEquals(Rational.of(-1, 2), Rational.ofContinuedFraction(Rational.of(-1, 2).toContinuedFraction()));
+        assertEquals(Rational.of(1, 3), Rational.ofContinuedFraction(Rational.of(1, 3).toContinuedFraction()));
+        assertEquals(Rational.of(-1, 3), Rational.ofContinuedFraction(Rational.of(-1, 3).toContinuedFraction()));
+        assertEquals(Rational.of(1, 4), Rational.ofContinuedFraction(Rational.of(1, 4).toContinuedFraction()));
+        assertEquals(Rational.of(-1, 4), Rational.ofContinuedFraction(Rational.of(-1, 4).toContinuedFraction()));
+
+        assertEquals(Rational.of(75025, 46368), Rational.ofContinuedFraction(Rational.of(75025, 46368).toContinuedFraction()));
+        assertEquals(Rational.of(-75025, 46368), Rational.ofContinuedFraction(Rational.of(-75025, 46368).toContinuedFraction()));
+        assertEquals(Rational.of(133, 29), Rational.ofContinuedFraction(Rational.of(133, 29).toContinuedFraction()));
+        assertEquals(Rational.of(-133, 29), Rational.ofContinuedFraction(Rational.of(-133, 29).toContinuedFraction()));
+        assertEquals(Rational.of(5, 133), Rational.ofContinuedFraction(Rational.of(5, 133).toContinuedFraction()));
+        assertEquals(Rational.of(-5, 133), Rational.ofContinuedFraction(Rational.of(-5, 133).toContinuedFraction()));
+        assertEquals(Rational.of(3, 5), Rational.ofContinuedFraction(Rational.of(3, 5).toContinuedFraction()));
+        assertEquals(Rational.of(-3, 5), Rational.ofContinuedFraction(Rational.of(-3, 5).toContinuedFraction()));
+        assertEquals(Rational.of(4, 3), Rational.ofContinuedFraction(Rational.of(4, 3).toContinuedFraction()));
+        assertEquals(Rational.of(-4, 3), Rational.ofContinuedFraction(Rational.of(-4, 3).toContinuedFraction()));
+        assertEquals(Rational.of(19, 7), Rational.ofContinuedFraction(Rational.of(19, 7).toContinuedFraction()));
+        assertEquals(Rational.of(-19, 7), Rational.ofContinuedFraction(Rational.of(-19, 7).toContinuedFraction()));
+    }
+
+    @Test
     void testCheck() {
         assertThrows(RuntimeException.class, () -> new Rational(null, BigInteger.ZERO, 1, true, true).check());
         assertThrows(RuntimeException.class, () -> new Rational(BigInteger.ZERO, null, 1, true, true).check());
