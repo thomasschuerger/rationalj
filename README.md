@@ -12,9 +12,9 @@ Upon creation, `Rational`s are automatically brought into canonical form:
 - if denominators are negative, the sign of the numerator and denominator is switched
 - zero uses a numerator of 0 and a denominator of 1 
 
-Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal.
+Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal. Working in canonical form makes sure that computations use smaller numbers and allows for certain optimizations.
 
-Rational offers no public constructors to allow minimizing the amount of instances created by being able to return `Rational`s from a pool of constants. Instead, `Rational`s are retrieved via `Rational.of(...)`.
+`Rational` offers no public constructors to allow minimizing the amount of instances created by being able to return `Rational`s from a pool of constants. Instead, `Rational`s are retrieved via `Rational.of(...)`.
 
 Suggestions, ideas and feedback are welcome!
 
@@ -42,7 +42,7 @@ The changelog is maintained in the file [CHANGELOG.md](CHANGELOG.md).
 
 > :warning: This documentation is based on the latest released version. Unreleased versions may differ.
 
-## Creating rationals
+## Creating `Rational`s
 
 Arbitrary `Rational`s can be created as follows:
 
@@ -58,7 +58,7 @@ Integer `Rational`s can be created as follows:
 - `Rational.of(BigInteger integer)`
 - `Rational.of(String string)` (using "`<integer>`", e.g. "`247`")
 
-## Operators on rationals
+## Operators on `Rational`s
 
 ### Unary operators
 
@@ -131,7 +131,7 @@ Output:
 31710869445015912176908843526535027555643447320787267779096898248431156738548305814867560678144006224158425966541000436701189187481211772088720561290395499/11665776930493019085212404857033337561339496033047702683574120486902199999153739451117682997019564785781712240103402969781398151364608000000000000000000000 = 2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274
 ```
 
-## Determine Egyptian fraction of a rational number
+## Determine the Egyptian fraction expansion of a rational number
 
 ```java
 // every positive rational number can be expressed as a finite sum of distinct unit fractions
@@ -175,6 +175,6 @@ k:  18270  sum: 1.620689655172413793103448275862 47/29
 Now we know that 47/29 = 1/1 + 1/2 + 1/9 + 1/105 + 1/18270.
 
 # FAQ
-## Shouldn't the class be called BigRational instead of Rational?
+## Shouldn't the class be called `BigRational` instead of `Rational`?
 
 `BigRational` would indeed have been a better name to match the other `Big*` classes, but only if there were already a class called `Rational` working with smaller number types. Since there isn't, the shorter name was chosen.
