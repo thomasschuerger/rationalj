@@ -50,6 +50,7 @@ Arbitrary `Rational`s can be created as follows:
 - `Rational.of(long numerator, long denominator)`
 - `Rational.of(BigInteger numerator, BigInteger denominator)`
 - `Rational.of(String string)` (using "`<numerator>/<denominator>`", e.g. "`-431/214`")
+- `Rational.ofContinuedFraction(BigInteger... integers) - Rational`
 
 Integer `Rational`s can be created as follows:
 
@@ -64,6 +65,8 @@ Integer `Rational`s can be created as follows:
 
 - `negate() - Rational`
 - `reciprocal() - Rational`
+- `redouble() - Rational`
+- `halve() - Rational`
 - `square() - Rational`
 - `signum() - int`
 - `abs() - Rational`
@@ -76,10 +79,23 @@ Integer `Rational`s can be created as follows:
 - `divide(Rational other) - Rational`
 - `divideInteger(Rational other) - BigInteger`
 - `divideIntegerAndRemainder(Rational other) - Number[] {BigInteger, Rational}`
+- `mod(Rational other) - Rational`
 - `pow(int power) - Rational`
 - `gcd(Rational other) - Rational`
+- `lcm(Rational other) - Rational`
 - `min(Rational other) - Rational`
 - `max(Rational other) - Rational`
+
+### Tests
+
+- `isNegationOf(Rational other) - boolean`
+- `isReciprocalOf(Rational other) - boolean`
+
+### Conversion
+
+- `toDecimal() - BigDecimal`
+- `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
+- `toContinuedFraction() - BigInteger[]`
 
 # Build
 
@@ -97,7 +113,7 @@ mvn clean install
 <dependency>
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
