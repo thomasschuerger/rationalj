@@ -34,14 +34,14 @@ public class Rational extends Number implements Comparable<Rational> {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 
+    /** BigInteger minus one. */
+    private static final BigInteger BI_MINUS_ONE = BigInteger.valueOf(-1);
+
     /** BigInteger one. */
     private static final BigInteger BI_ZERO = BigInteger.ZERO;
 
     /** BigInteger one. */
     private static final BigInteger BI_ONE = BigInteger.ONE;
-
-    /** BigInteger minus one. */
-    private static final BigInteger BI_MINUS_ONE = BigInteger.valueOf(-1);
 
     /** BigInteger two. */
     private static final BigInteger BI_TWO = BigInteger.valueOf(2);
@@ -49,26 +49,26 @@ public class Rational extends Number implements Comparable<Rational> {
     /** BigInteger ten. */
     private static final BigInteger BI_TEN = BigInteger.TEN;
 
-    /** Ten. */
-    public static final Rational TEN = new Rational(BI_TEN);
-
-    /** Two. */
-    public static final Rational TWO = new Rational(BI_TWO);
-
-    /** One. */
-    public static final Rational ONE = new Rational(BI_ONE);
-
-    /** One half. */
-    public static final Rational ONE_HALF = new Rational(BI_ONE, BI_TWO);
-
-    /** Zero. */
-    public static final Rational ZERO = new Rational(BI_ZERO);
+    /** Minus one. */
+    public static final Rational MINUS_ONE = new Rational(BI_MINUS_ONE);
 
     /** Minus one half. */
     public static final Rational MINUS_ONE_HALF = new Rational(BI_MINUS_ONE, BI_TWO);
 
-    /** Minus one. */
-    public static final Rational MINUS_ONE = new Rational(BI_MINUS_ONE);
+    /** Zero. */
+    public static final Rational ZERO = new Rational(BI_ZERO);
+
+    /** One half. */
+    public static final Rational ONE_HALF = new Rational(BI_ONE, BI_TWO);
+
+    /** One. */
+    public static final Rational ONE = new Rational(BI_ONE);
+
+    /** Two. */
+    public static final Rational TWO = new Rational(BI_TWO);
+
+    /** Ten. */
+    public static final Rational TEN = new Rational(BI_TEN);
 
     /** The numerator. */
     private final BigInteger numerator;
