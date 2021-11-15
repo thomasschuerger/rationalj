@@ -113,7 +113,7 @@ mvn clean install
 <dependency>
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
