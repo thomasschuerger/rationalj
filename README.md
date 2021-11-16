@@ -59,7 +59,12 @@ Integer `Rational`s can be created as follows:
 - `Rational.of(BigInteger integer)`
 - `Rational.of(String string)` (using "`<integer>`", e.g. "`247`")
 
-## Operators on `Rational`s
+## Methods on `Rational`s
+
+### Getters
+
+- `numerator() - BigInteger`
+- `denominator() - BigInteger`
 
 ### Unary operators
 
@@ -88,11 +93,17 @@ Integer `Rational`s can be created as follows:
 
 ### Tests
 
+- `isInteger() - boolean`
 - `isNegationOf(Rational other) - boolean`
 - `isReciprocalOf(Rational other) - boolean`
 
 ### Conversion
 
+- `intValue() - int`
+- `longValue() - long`
+- `floatValue() - float`
+- `doubleValue() - double`
+- `toInteger() - BigInteger`
 - `toDecimal() - BigDecimal`
 - `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
 - `toContinuedFraction() - BigInteger[]`
