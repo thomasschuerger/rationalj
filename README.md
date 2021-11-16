@@ -120,7 +120,7 @@ mvn clean install
 ## Gradle
 
 ```gradle
-implementation 'com.schuerger.math:rationalj:1.1.0'
+implementation 'com.schuerger.math:rationalj:1.1.1'
 ```
 
 # Examples
