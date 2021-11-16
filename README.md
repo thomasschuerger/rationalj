@@ -16,6 +16,8 @@ Therefore, two `Rational`s are equal if and only if their numerators are equal a
 
 `Rational` offers no public constructors to allow minimizing the amount of instances created by being able to return `Rational`s from a pool of constants. Instead, `Rational`s are retrieved via `Rational.of(...)`.
 
+Issues can be reported [here](https://github.com/thomasschuerger/rationalj/issues).
+
 Suggestions, ideas and feedback are welcome!
 
 Author: Thomas Schuerger (thomas@schuerger.com)
