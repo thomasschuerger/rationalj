@@ -108,6 +108,38 @@ Integer `Rational`s can be created as follows:
 - `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
 - `toContinuedFraction() - BigInteger[]`
 
+# Git
+
+## Clone the repository
+
+Clone the repository via
+
+```bash
+git clone https://github.com/thomasschuerger/rationalj.git
+```
+
+## Versions
+
+The master branch contains the newest version, which is usually the newest unreleased version. Versions are tagged with "v<version>", e.g. "v1.0.0".
+
+Show all released versions:
+
+```bash
+git tag
+```
+
+Switch to a released version:
+
+```bash
+git checkout <tag>
+```
+
+Switch to the newest (unreleased) version:
+
+```bash
+git checkout master
+```
+
 # Build
 
 RationalJ uses Maven.
