@@ -108,11 +108,11 @@ public class Rational extends Number implements Comparable<Rational> {
      * @throws IllegalArgumentException if the denominator is zero
      */
     private Rational(BigInteger numerator, BigInteger denominator) {
-        if (denominator.equals(BI_ZERO)) {
+        if (denominator.signum() == 0) {
             throw new IllegalArgumentException("denominator must be non-zero");
         }
 
-        if (numerator.equals(BI_ZERO)) {
+        if (numerator.signum() == 0) {
             this.numerator = BI_ZERO;
             this.denominator = BI_ONE;
             this.isInteger = true;
@@ -219,6 +219,15 @@ public class Rational extends Number implements Comparable<Rational> {
         return integers.toArray(result);
     }
 
+    /**
+     * Returns the Rational represented by the given integers a_i that resemble the continued fraction a_1 + 1/(a_2 + 1/(a_3 + 1/(a_4 + ...))).
+     *
+     * @param integers the array of integers (must not be empty)
+     *
+     * @return the Rational
+     *
+     * @throws IllegalArgumentException if the array of integers is empty
+     */
     public static Rational ofContinuedFraction(BigInteger... integers) {
         int len = integers.length;
         switch (len) {
@@ -335,9 +344,9 @@ public class Rational extends Number implements Comparable<Rational> {
      * @throws IllegalArgumentException if the denominator is 0
      */
     public static Rational of(BigInteger numerator, BigInteger denominator) {
-        if (denominator.equals(BI_ZERO)) {
+        if (denominator.signum() == 0) {
             throw new IllegalArgumentException("denominator must be non-zero");
-        } else if (numerator.equals(BI_ZERO)) {
+        } else if (numerator.signum() == 0) {
             return ZERO;
         } else if (numerator.equals(denominator)) {
             return ONE;
@@ -401,7 +410,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      */
     public static Rational of(BigInteger integer) {
-        if (integer.equals(BI_ZERO)) {
+        if (integer.signum() == 0) {
             return ZERO;
         } else if (integer.equals(BI_MINUS_ONE)) {
             return MINUS_ONE;
@@ -411,6 +420,97 @@ public class Rational extends Number implements Comparable<Rational> {
             return TEN;
         } else {
             return new Rational(integer);
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the unit fraction 1/denominator.
+     *
+     * @param denominator the denominator (must not be 0)
+     *
+     * @return the Rational
+     *
+     * @throws IllegalArgumentException if the denominator is 0
+     */
+    public static Rational ofReciprocal(int denominator) {
+        switch (denominator) {
+        case 0:
+            throw new IllegalArgumentException("denominator must be non-zero");
+        case 1:
+            return ONE;
+        case -1:
+            return MINUS_ONE;
+        case 2:
+            return ONE_HALF;
+        default:
+            if (denominator > 0) {
+                // positive
+                return new Rational(BI_ONE, BigInteger.valueOf(denominator), 1, false, false);
+            } else if (denominator == Integer.MIN_VALUE) {
+                // we can't negate Integer.MIN_VALUE as an int
+                return new Rational(BI_MINUS_ONE, BI_ONE.shiftLeft(31), -1, false, false);
+            } else {
+                return new Rational(BI_MINUS_ONE, BigInteger.valueOf(-denominator), -1, false, false);
+            }
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the unit fraction 1/denominator.
+     *
+     * @param denominator the denominator (must not be 0)
+     *
+     * @return the Rational
+     *
+     * @throws IllegalArgumentException if the denominator is 0
+     */
+    public static Rational ofReciprocal(long denominator) {
+        if (denominator == 0L) {
+            throw new IllegalArgumentException("denominator must be non-zero");
+        } else if (denominator > 0) {
+            if (denominator == 1L) {
+                return ONE;
+            } else if (denominator == 2L) {
+                return ONE_HALF;
+            } else {
+                return new Rational(BI_ONE, BigInteger.valueOf(denominator), 1, false, false);
+            }
+        } else if (denominator == -1L) {
+            return MINUS_ONE;
+        } else if (denominator == Long.MIN_VALUE) {
+            // we can't negate Long.MIN_VALUE as a long
+            return new Rational(BI_MINUS_ONE, BI_ONE.shiftLeft(63), -1, false, false);
+        } else {
+            return new Rational(BI_MINUS_ONE, BigInteger.valueOf(-denominator), -1, false, false);
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the unit fraction 1/denominator.
+     *
+     * @param denominator the denominator (must not be 0)
+     *
+     * @return the Rational
+     *
+     * @throws IllegalArgumentException if the denominator is 0
+     */
+    public static Rational ofReciprocal(BigInteger denominator) {
+        int signum = denominator.signum();
+
+        if (signum == 0) {
+            throw new IllegalArgumentException("denominator must be non-zero");
+        } else if (signum > 0) {
+            if (denominator.equals(BI_ONE)) {
+                return ONE;
+            } else if (denominator.equals(BI_TWO)) {
+                return ONE_HALF;
+            } else {
+                return new Rational(BI_ONE, denominator, 1, false, false);
+            }
+        } else if (denominator.equals(BI_MINUS_ONE)) {
+            return MINUS_ONE;
+        } else {
+            return new Rational(BI_MINUS_ONE, denominator.negate(), -1, false, false);
         }
     }
 
@@ -589,6 +689,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational (must not be 0)
      *
      * @return the quotient of this and other
+     *
+     * @throws IllegalArgumentException if other is 0
      */
     public Rational divide(Rational other) {
         if (other.signum == 0) {
@@ -612,6 +714,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational (must not be 0)
      *
      * @return the quotient of this and other
+     *
+     * @throws IllegalArgumentException if other is 0
      */
     public BigInteger divideInteger(Rational other) {
         if (other.signum == 0) {
@@ -642,6 +746,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational (must not be 0)
      *
      * @return an Object array with a BigInteger and a Rational
+     *
+     * @throws IllegalArgumentException if other is 0
      */
     public Number[] divideIntegerAndRemainder(Rational other) {
         if (other.signum == 0) {
@@ -675,6 +781,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational (must not be 0)
      *
      * @return this modulo other
+     *
+     * @throws IllegalArgumentException if other is 0
      */
     public Rational mod(Rational other) {
         if (other.signum == 0) {
@@ -840,11 +948,13 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns this Rational to the given integer power. Not both of the Rational and the power must be 0.
+     * Returns this Rational to the given integer power. If this Rational is 0, the power must be positive.
      *
      * @param power the power
      *
-     * @return the power'th power
+     * @return the power'th power of this Rational
+     *
+     * @throws IllegalArgumentException if this Rational is 0 and the power is not positive
      */
     public Rational pow(int power) {
         if (power == 0) {
@@ -1079,11 +1189,11 @@ public class Rational extends Number implements Comparable<Rational> {
             throw new IllegalStateException("denominator is null: " + toDetailString());
         }
 
-        if (denominator.equals(BI_ZERO)) {
+        if (denominator.signum() == 0) {
             throw new IllegalStateException("denominator is 0: " + toDetailString());
         }
 
-        if (denominator.signum() <= 0) {
+        if (denominator.signum() < 0) {
             throw new IllegalStateException("Denominator is not positive: " + toDetailString());
         }
 
@@ -1101,14 +1211,6 @@ public class Rational extends Number implements Comparable<Rational> {
 
         if (isOne ^ (isInteger && numerator.equals(BI_ONE))) {
             throw new IllegalStateException("isOne is wrong: " + toDetailString());
-        }
-
-        if ((signum == 0) ^ numerator.equals(BI_ZERO)) {
-            throw new IllegalStateException("isZero is wrong: " + toDetailString());
-        }
-
-        if (signum == 0 && !denominator.equals(BI_ONE)) {
-            throw new IllegalStateException("0 does not have denominator 1: " + toDetailString());
         }
     }
 

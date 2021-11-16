@@ -40,16 +40,19 @@ class RationalTest {
         assertThrows(IllegalArgumentException.class, () -> Rational.of(1, 0));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(-1, 0));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(5, 0));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0));
 
         assertThrows(IllegalArgumentException.class, () -> Rational.of(0L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(1L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(-1L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(5L, 0L));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0L));
 
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ZERO, BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ONE, BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ONE.negate(), BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.valueOf(5), BigInteger.ZERO));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(BigInteger.ZERO));
 
         assertThrows(IllegalArgumentException.class, () -> Rational.of("5/7/"));
         assertThrows(NumberFormatException.class, () -> Rational.of(""));
@@ -83,6 +86,28 @@ class RationalTest {
         assertEquals(Rational.TEN, Rational.of(10));
         assertEquals(Rational.TEN, Rational.of(10L));
         assertEquals(Rational.TEN, Rational.of(BigInteger.valueOf(10)));
+
+        assertEquals(Rational.ONE, Rational.ofReciprocal(1));
+        assertEquals(Rational.ONE, Rational.ofReciprocal(1L));
+        assertEquals(Rational.ONE, Rational.ofReciprocal(BigInteger.ONE));
+        assertEquals(Rational.MINUS_ONE, Rational.ofReciprocal(-1));
+        assertEquals(Rational.MINUS_ONE, Rational.ofReciprocal(-1L));
+        assertEquals(Rational.MINUS_ONE, Rational.ofReciprocal(BigInteger.valueOf(-1)));
+        assertEquals(Rational.ONE_HALF, Rational.ofReciprocal(2));
+        assertEquals(Rational.ONE_HALF, Rational.ofReciprocal(2L));
+        assertEquals(Rational.ONE_HALF, Rational.ofReciprocal(BigInteger.valueOf(2)));
+        assertEquals(Rational.MINUS_ONE_HALF, Rational.ofReciprocal(-2));
+        assertEquals(Rational.MINUS_ONE_HALF, Rational.ofReciprocal(-2L));
+        assertEquals(Rational.MINUS_ONE_HALF, Rational.ofReciprocal(BigInteger.valueOf(-2)));
+        assertEquals(Rational.of(1, 7), Rational.ofReciprocal(7));
+        assertEquals(Rational.of(1, 7), Rational.ofReciprocal(7L));
+        assertEquals(Rational.of(1, 7), Rational.ofReciprocal(BigInteger.valueOf(7)));
+        assertEquals(Rational.of(-1, 7), Rational.ofReciprocal(-7));
+        assertEquals(Rational.of(-1, 7), Rational.ofReciprocal(-7L));
+        assertEquals(Rational.of(-1, 7), Rational.ofReciprocal(BigInteger.valueOf(-7)));
+
+        assertEquals(Rational.TWO.pow(31).negate().reciprocal(), Rational.ofReciprocal(Integer.MIN_VALUE));
+        assertEquals(Rational.TWO.pow(63).negate().reciprocal(), Rational.ofReciprocal(Long.MIN_VALUE));
     }
 
     @Test
@@ -690,7 +715,7 @@ class RationalTest {
         Rational sum = Rational.ZERO;
 
         for (int i = 1; i <= 1000; i++) {
-            sum = sum.add(Rational.of(1, i));
+            sum = sum.add(Rational.ofReciprocal(i));
         }
 
         assertEquals(Rational.of(new BigInteger(
