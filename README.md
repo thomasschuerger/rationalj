@@ -26,9 +26,9 @@ RationalJ is licensed under the Apache License 2.0. See file [LICENSE](LICENSE) 
 
 # Prerequisites
 
-Java 8 or later is required.
+Java 8 or later is required. The library would also work with Java 5, but the unit tests currently require Java 8. Note that even Java 8 is already pretty old (released 2014).
 
-The library would also work with Java 5, but the unit tests currently require Java 8. Note that even Java 8 is already pretty old (released 2014).
+Maven 3.6.0 or later is required for building the library.
 
 # Dependencies
 
@@ -110,11 +110,15 @@ Integer `Rational`s can be created as follows:
 
 # Build
 
+RationalJ uses Maven.
+
 Run
 
 ```bash
 mvn clean install
 ```
+
+to build and install the JAR file into your local Maven repository.
 
 # Integrate
 
