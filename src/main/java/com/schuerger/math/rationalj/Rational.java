@@ -37,7 +37,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /** BigInteger minus one. */
     private static final BigInteger BI_MINUS_ONE = BigInteger.valueOf(-1);
 
-    /** BigInteger one. */
+    /** BigInteger zero. */
     private static final BigInteger BI_ZERO = BigInteger.ZERO;
 
     /** BigInteger one. */
@@ -48,6 +48,12 @@ public class Rational extends Number implements Comparable<Rational> {
 
     /** BigInteger ten. */
     private static final BigInteger BI_TEN = BigInteger.TEN;
+
+    /** BigInteger 2^31. */
+    private static final BigInteger BI_TWO_TO_31 = BI_ONE.shiftLeft(31);
+
+    /** BigInteger 2^63. */
+    private static final BigInteger BI_TWO_TO_63 = BI_ONE.shiftLeft(63);
 
     /** Minus one. */
     public static final Rational MINUS_ONE = new Rational(BI_MINUS_ONE);
@@ -76,13 +82,13 @@ public class Rational extends Number implements Comparable<Rational> {
     /** The denominator (always greater than 0). */
     private final BigInteger denominator;
 
-    /** The signum of this Rational (-1 = negative, 0 = zero, 1 = positive). */
+    /** The signum of this Rational (<0 = negative, 0 = zero, >0 = positive). */
     private final int signum;
 
     /** True iff this Rational is an integer. */
     private final boolean isInteger;
 
-    /** True if this Rational is equal to one. */
+    /** True iff this Rational is equal to one. */
     private final boolean isOne;
 
     /**
@@ -103,7 +109,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * not be equal to zero.
      *
      * @param numerator the numerator
-     * @param denominator the denominator
+     * @param denominator the denominator (must not be 0)
      *
      * @throws IllegalArgumentException if the denominator is zero
      */
@@ -149,10 +155,10 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Creates a Rational from the given parameters. All parameters must be in canonical form.
+     * Creates a Rational from the given parameters. All parameters must be in canonical form and valid.
      *
      * @param numerator the numerator
-     * @param denominator the denominator
+     * @param denominator the denominator (must not be 0)
      * @param isInteger flag indicating whether the Rational is an integer
      * @param signum the signum
      * @param isOne flag indicating whether the Rational is one
@@ -269,7 +275,7 @@ public class Rational extends Number implements Comparable<Rational> {
      *
      * @return the Rational
      *
-     * @throws IllegalArgumentException if the string contains more than one '/' character
+     * @throws IllegalArgumentException if the string contains more than one '/' character or if the denominator is 0
      */
 
     public static Rational of(String string) {
@@ -292,7 +298,7 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational based on the given numerator and denominator.
      *
      * @param numerator the numerator
-     * @param denominator the denominator
+     * @param denominator the denominator (must not be 0)
      *
      * @return the Rational
      *
@@ -424,7 +430,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a Rational that represents the unit fraction 1/denominator.
+     * Returns a Rational that represents the unit fraction 1/denominator. The denominator must not be 0.
      *
      * @param denominator the denominator (must not be 0)
      *
@@ -448,7 +454,7 @@ public class Rational extends Number implements Comparable<Rational> {
                 return new Rational(BI_ONE, BigInteger.valueOf(denominator), 1, false, false);
             } else if (denominator == Integer.MIN_VALUE) {
                 // we can't negate Integer.MIN_VALUE as an int
-                return new Rational(BI_MINUS_ONE, BI_ONE.shiftLeft(31), -1, false, false);
+                return new Rational(BI_MINUS_ONE, BI_TWO_TO_31, -1, false, false);
             } else {
                 return new Rational(BI_MINUS_ONE, BigInteger.valueOf(-denominator), -1, false, false);
             }
@@ -456,7 +462,7 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a Rational that represents the unit fraction 1/denominator.
+     * Returns a Rational that represents the unit fraction 1/denominator. The denominator must not be 0.
      *
      * @param denominator the denominator (must not be 0)
      *
@@ -479,14 +485,14 @@ public class Rational extends Number implements Comparable<Rational> {
             return MINUS_ONE;
         } else if (denominator == Long.MIN_VALUE) {
             // we can't negate Long.MIN_VALUE as a long
-            return new Rational(BI_MINUS_ONE, BI_ONE.shiftLeft(63), -1, false, false);
+            return new Rational(BI_MINUS_ONE, BI_TWO_TO_63, -1, false, false);
         } else {
             return new Rational(BI_MINUS_ONE, BigInteger.valueOf(-denominator), -1, false, false);
         }
     }
 
     /**
-     * Returns a Rational that represents the unit fraction 1/denominator.
+     * Returns a Rational that represents the unit fraction 1/denominator. The denominator must not be 0.
      *
      * @param denominator the denominator (must not be 0)
      *
@@ -537,7 +543,8 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns an int that represents this Rational, rounding towards zero.
+     * Returns an int that represents this Rational, rounding towards zero. Note that the behavior is undefined if the result does not fit into an
+     * int.
      *
      * @return an int that is a rounded representation of this Rational
      */
@@ -551,7 +558,8 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a long that represents this Rational, rounding towards zero.
+     * Returns a long that represents this Rational, rounding towards zero. Note that the behavior is undefined if the result does not fit into a
+     * long.
      *
      * @return a long that is a rounded representation of this Rational
      */
@@ -565,7 +573,8 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a BigDecimal that represents this Rational.
+     * Returns a BigDecimal that represents this Rational. The BigDecimal uses a scale of zero if this Rational is an integer, otherwise it uses a
+     * scale of 100 and RoundingMode.DOWN.
      *
      * @return a BigDecimal that is a rounded representation of this Rational
      */
@@ -595,7 +604,8 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a double that represents this Rational.
+     * Returns a double that represents this Rational. Note that the behavior is undefined if the result does not fit into a double. Note also that
+     * precision may be lost.
      *
      * @return a double that is a rounded representation of this Rational
      */
@@ -605,7 +615,8 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a float that represents this Rational.
+     * Returns a float that represents this Rational. Note that the behavior is undefined if the result does not fit into a float. Note also that
+     * precision may be lost.
      *
      * @return a float that is a rounded representation of this Rational
      */
