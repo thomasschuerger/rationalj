@@ -834,7 +834,7 @@ public class Rational extends Number implements Comparable<Rational> {
     public Rational negate() {
         if (signum == 0) {
             return ZERO;
-        } else if (numerator.equals(BI_MINUS_ONE)) {
+        } else if (isInteger && numerator.equals(BI_MINUS_ONE)) {
             return ONE;
         } else {
             // negation keeps numerator and denominator coprime

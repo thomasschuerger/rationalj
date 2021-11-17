@@ -324,6 +324,8 @@ class RationalTest {
         assertEquals(Rational.of(-1), Rational.of(1).negate());
         assertEquals(Rational.of(7L, 17L), Rational.of(-7, 17).negate());
         assertEquals(Rational.of(5L, 1L), Rational.of(-5, 1).negate());
+        assertEquals(Rational.of(1, 5), Rational.of(-1, 5).negate());
+        assertEquals(Rational.of(-1, 5), Rational.of(1, 5).negate());
     }
 
     @Test

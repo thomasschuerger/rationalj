@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Rational.ofReciprocal(long denominator) - Rational`
 - `Rational.ofReciprocal(BigInteger denominator) - Rational`
 
+### Fixed
+
+ - `negate()` could deliver wrong result if the numerator was -1
+
 ## [1.1.1] - 2021-11-15
 
 Corrected Maven version. Other than that, this version is identical to version 1.1.0.
