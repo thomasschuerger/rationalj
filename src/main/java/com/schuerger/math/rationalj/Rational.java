@@ -82,7 +82,7 @@ public class Rational extends Number implements Comparable<Rational> {
     /** The denominator (always greater than 0). */
     private final BigInteger denominator;
 
-    /** The signum of this Rational (<0 = negative, 0 = zero, >0 = positive). */
+    /** The signum of this Rational (&lt;0 = negative, 0 = zero, &gt;0 = positive). */
     private final int signum;
 
     /** True iff this Rational is an integer. */
