@@ -52,6 +52,9 @@ Arbitrary `Rational`s can be created as follows:
 - `Rational.of(long numerator, long denominator)`
 - `Rational.of(BigInteger numerator, BigInteger denominator)`
 - `Rational.of(String string)` (using "`<numerator>/<denominator>`", e.g. "`-431/214`")
+- `Rational.ofReciprocal(int denominator) - Rational`
+- `Rational.ofReciprocal(long denominator) - Rational`
+- `Rational.ofReciprocal(BigInteger denominator) - Rational`
 - `Rational.ofContinuedFraction(BigInteger... integers) - Rational`
 
 Integer `Rational`s can be created as follows:
