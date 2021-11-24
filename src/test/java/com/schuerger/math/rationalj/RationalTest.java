@@ -734,7 +734,7 @@ class RationalTest {
         Rational sum = Rational.ZERO;
 
         for (int i = 1; i <= 1000; i++) {
-            sum = sum.add(Rational.of((i % 2) > 0 ? 1 : -1, i));
+            sum = sum.add(Rational.ofReciprocal((i % 2) > 0 ? i : -i));
         }
 
         assertEquals(Rational.of(
