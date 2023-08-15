@@ -863,6 +863,25 @@ class RationalTest {
     }
 
     @Test
+    void testSqrt2() {
+        // approximate sqrt(2) starting from 1 using 10 Newton-Raphson iterations
+
+        // compute square root of this number
+        Rational sqrt = Rational.of(2);
+
+        // start
+        Rational x = Rational.ONE;
+
+        for (int i = 0; i < 10; i++) {
+            x = x.add(sqrt.divide(x)).halve();
+        }
+
+        assertEquals(Rational.of(
+                "45842869094724092282256664559525216692173091162526497018856817207453767127095354052418072639857700888691134361639497243771528176716782876457748796945284249594870200383920805322146999777923783319507727283850422831309915607777814766948159289963355518294865659883896712136501856004613518112550490551045680741845733583765205748593300762225277706242970719821414680060203467479543923750220952764417/32415803605926610717906209990215925889160576452720547724429585547651493040781333832362975891811042370960101005436793459936444123023843707180863927766463725709098731479142615931281199106042945274354413006295825020803450451201071934075872286636802447240751072096022370680513420925571815159954608073162324835009657121509219599603167122882578517323407726312472428238351392267283960361495336307712"),
+                x);
+    }
+
+    @Test
     void testSqrt3() {
         // approximate sqrt(3) starting from 2 using 10 Newton-Raphson iterations
 
@@ -916,6 +935,21 @@ class RationalTest {
     }
 
     @Test
+    void testPhi2() {
+        // approximate phi (the Golden Ratio) via Newton-Raphson iterations by solving x^2 - x - 1 = 0
+
+        Rational x = Rational.ONE;
+
+        for (int i = 0; i < 10; i++) {
+            x = x.subtract(x.square().subtract(x).subtract(Rational.ONE).divide(x.redouble().subtract(Rational.ONE)));
+        }
+
+        assertEquals(Rational.of(
+                "7291993184377412737043195648396979558721167948342308637716205818587400148912186579874409368754354848994831816250311893410648104792440789475340471377366852420526027975140687031196633477605718294523235826853392138525/4506699633677819813104383235728886049367860596218604830803023149600030645708721396248792609141030396244873266580345011219530209367425581019871067646094200262285202346655868899711089246778413354004103631553925405243"),
+                x);
+    }
+
+    @Test
     void testPi() {
         // Euler's, 1.2 digits per iteration
         // arccot(2) + arccot(3)
@@ -935,23 +969,23 @@ class RationalTest {
 
         // Kikuo Takano, 6.8 digits per iteration
         // 12*arccot(49) + 32*arccot(57) -5*arccot(239) + 12*arccot(110443)
-        // assertEquals(PI_1000, testPi(148, 1000, 12, 49, 32, 57, -5, 239, 12, 110443));
+        assertEquals(PI_1000, testPi(148, 1000, 12, 49, 32, 57, -5, 239, 12, 110443));
 
         // F. C. M. Størmer, 7 digits per iteration
         // 44*arccot(57) + 7*arccot(239) -12*arccot(682) + 24*arccot(12943)
-        // assertEquals(PI_1000, testPi(143, 1000, 44, 57, 7, 239, -12, 682, 24, 12943));
+        assertEquals(PI_1000, testPi(143, 1000, 44, 57, 7, 239, -12, 682, 24, 12943));
 
         // Hwang Chien-Lih, 9.5 digits per iteration
         // 183*arccot(239) + 32*arccot(1023) - 68*arccot(5832) + 12*arccot(110443) - 12*arccot(4841182) - 100*arccot(6826318)
-        // assertEquals(PI_1000, testPi(105, 1000, 183, 239, 32, 1023, -68, 5832, 12, 110443, -12, 4841182, -100, 6826318));
+        assertEquals(PI_1000, testPi(105, 1000, 183, 239, 32, 1023, -68, 5832, 12, 110443, -12, 4841182, -100, 6826318));
 
         // Uwe Arndt, 22.2 digits per iteration
-        // assertEquals(PI_1000, testPi(45, 1000, 36462, 390112, 135908, 485298, 274509, 683982, -39581, 1984933, 178477, 2478328, -114569, 3449051,
-        // -146571, 18975991, 61914, 22709274, -69044, 24208144, -89431, 201229582, -43938, 2189376182L));
+        assertEquals(PI_1000, testPi(45, 1000, 36462, 390112, 135908, 485298, 274509, 683982, -39581, 1984933, 178477, 2478328, -114569, 3449051,
+                -146571, 18975991, 61914, 22709274, -69044, 24208144, -89431, 201229582, -43938, 2189376182L));
 
         // Hwang Chien-Lih, 10.9 digits per iteration
-        // assertEquals(PI_1000, testPi(53, 1000, 36462, 51387, 26522, 485298, 19275, 683982, -3119, 1984933, -3833, 2478328, -5183, 3449051, -37185,
-        // 18975991, -11010, 22709274, 3880, 24208144, -16507, 201229582, -7476, 2189376182L));
+        assertEquals(PI_1000, testPi(53, 1000, 36462, 51387, 26522, 485298, 19275, 683982, -3119, 1984933, -3833, 2478328, -5183, 3449051, -37185,
+                18975991, -11010, 22709274, 3880, 24208144, -16507, 201229582, -7476, 2189376182L));
 
         // unknown, 6.2 digits per iteration
         // 22*arctan(24478/873121) + 17*arctan(685601/69049993)
@@ -963,59 +997,16 @@ class RationalTest {
 
     }
 
-    private String testOld(int iterations, int digits, int... numbers) {
-        long start = System.currentTimeMillis();
-
-        int n = numbers.length / 2;
-
-        Rational sum = Rational.ZERO;
-        Rational number = Rational.of(1);
-
-        Rational[] coefficients = new Rational[n];
-        Rational[] reciprocals = new Rational[n];
-        Rational[] squares = new Rational[n];
-        Rational[] powers = new Rational[n];
-
-        double x = 0.0d;
-
-        for (int i = 0; i < n; i++) {
-            coefficients[i] = Rational.of(numbers[i * 2]);
-            reciprocals[i] = Rational.of(1, numbers[i * 2 + 1]);
-            squares[i] = reciprocals[i].square();
-            powers[i] = reciprocals[i];
-            x += 1 / Math.log10(numbers[i * 2 + 1]);
-        }
-
-        System.out.println("Lehmers measure: " + x);
-
-        for (int i = 0; i < iterations; i++) {
-            Rational s = Rational.ZERO;
-            for (int k = 0; k < n; k++) {
-                s = s.add(coefficients[k].multiply(powers[k]));
-                powers[k] = powers[k].multiply(squares[k]);
-            }
-            sum = sum.add(s.divide(number));
-            number = number.add(Rational.TWO);
-
-            s = Rational.ZERO;
-            for (int k = 0; k < n; k++) {
-                s = s.subtract(coefficients[k].multiply(powers[k]));
-                powers[k] = powers[k].multiply(squares[k]);
-            }
-            sum = sum.add(s.divide(number));
-            number = number.add(Rational.TWO);
-
-        }
-
-        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
-
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
-        return result;
-    }
-
+    /**
+     * Calculate Pi by summing up integer multiples of unit fraction arctangents.
+     *
+     * @param iterations the number of iterations
+     * @param digits the number of decimal digits to use
+     * @param numbers pairs (a,b) making up each summand of the type a*arctan(1/b) or, equivalently, a*arccot(b)
+     *
+     * @return the result
+     */
     private String testPi(int iterations, int digits, long... numbers) {
-        long start = System.currentTimeMillis();
-
         int n = numbers.length / 2;
 
         Rational number = Rational.of(1);
@@ -1073,15 +1064,19 @@ class RationalTest {
             sum = sum.add(coefficients[i].multiply(sums[i]));
         }
 
-        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
-
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
-        return result;
+        return sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
     }
 
+    /**
+     * Calculate Pi by summing up integer multiples of arctangents of rationals.
+     *
+     * @param iterations the number of iterations
+     * @param digits the number of decimal digits to use
+     * @param numbers triples (a,b,c) making up each summand of the type a*arctan(b/c)
+     *
+     * @return the result
+     */
     private String testPiRational(int iterations, int digits, long... numbers) {
-        long start = System.currentTimeMillis();
-
         int n = numbers.length / 3;
 
         Rational number = Rational.of(1);
@@ -1139,47 +1134,7 @@ class RationalTest {
             sum = sum.add(coefficients[i].multiply(sums[i]));
         }
 
-        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
-
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
-        return result;
-    }
-
-    private String testPi(int iterations, int digits) {
-        // 2,3,1,7
-
-        long start = System.currentTimeMillis();
-
-        Rational sum1 = Rational.ZERO;
-        Rational sum2 = Rational.ZERO;
-        Rational number = Rational.of(1);
-
-        Rational f1 = Rational.of(1, 3);
-        Rational f2 = Rational.of(1, 7);
-        Rational p1 = f1;
-        Rational p2 = f2;
-        Rational s1 = p1.square();
-        Rational s2 = p2.square();
-        Rational two = Rational.TWO;
-
-        for (int i = 0; i < iterations; i++) {
-            sum1 = sum1.add(p1.divide(number));
-            sum2 = sum2.add(p2.divide(number));
-            p1 = p1.multiply(s1);
-            p2 = p2.multiply(s2);
-            number = number.add(two);
-            sum1 = sum1.subtract(p1.divide(number));
-            sum2 = sum2.subtract(p2.divide(number));
-            p1 = p1.multiply(s1);
-            p2 = p2.multiply(s2);
-            number = number.add(two);
-        }
-
-        String result = sum1.redouble().add(sum2).multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
-
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
-        return result;
-
+        return sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
     }
 
     /**
