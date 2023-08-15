@@ -1050,6 +1050,65 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
+     * Returns a Rational that represents the largest integer smaller than or equal to this Rational. Thus, if the Rational is not an integer, rounds
+     * down to the previous integer.
+     *
+     * @return the floor of this Rational
+     */
+    public Rational floor() {
+        if (isInteger) {
+            return this;
+        } else if (signum > 0) {
+            return Rational.of(numerator.divide(denominator));
+        } else {
+            return Rational.of(numerator.divide(denominator).subtract(BI_ONE));
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the smallest integer larger than or equal to this rational. Thus, if the Rational is not an integer, rounds
+     * up to the next integer.
+     *
+     * @return the ceiling of this Rational
+     */
+    public Rational ceil() {
+        if (isInteger) {
+            return this;
+        } else if (signum > 0) {
+            return Rational.of(numerator.divide(denominator).add(BI_ONE));
+        } else {
+            return Rational.of(numerator.divide(denominator));
+        }
+    }
+
+    /**
+     * Returns a Rational that represents the integer closest to this Rational. In case of a tie, rounds towards infinity for positive numbers and
+     * towards minus infinity for negative numbers.
+     *
+     * @return the
+     */
+    public Rational round() {
+        if (isInteger) {
+            return this;
+        }
+
+        BigInteger[] m = numerator.divideAndRemainder(denominator);
+        BigInteger mod = m[1].shiftLeft(1);
+
+        if (signum > 0) {
+            if (mod.compareTo(denominator) >= 0) {
+                return Rational.of(m[0].add(BI_ONE));
+            } else {
+                return Rational.of(m[0]);
+            }
+        } else if (mod.negate().compareTo(denominator) >= 0) {
+            return Rational.of(m[0].subtract(BI_ONE));
+        } else {
+            return Rational.of(m[0]);
+        }
+    }
+
+    /**
      * Returns a Rational representing the greatest common divisor (GCD) of this Rational and the given other Rational. Returns 0 if both Rationals
      * are 0.
      *

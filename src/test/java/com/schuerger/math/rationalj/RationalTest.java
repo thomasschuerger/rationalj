@@ -34,6 +34,9 @@ import org.junit.jupiter.api.Test;
 
 class RationalTest {
 
+    /** Pi with 1000 decimal digits. */
+    private static final String PI_1000 = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989";
+
     @Test
     void testOf() {
         assertThrows(IllegalArgumentException.class, () -> Rational.of(0, 0));
@@ -400,6 +403,123 @@ class RationalTest {
         assertEquals(Rational.of(-15, 38), Rational.of(-15, 19).halve());
         assertEquals(Rational.of(7, 19), Rational.of(14, 19).halve());
         assertEquals(Rational.of(-7, 19), Rational.of(-14, 19).halve());
+    }
+
+    @Test
+    void testFloor() {
+        assertEquals(Rational.of(0), Rational.of(0).floor());
+        assertEquals(Rational.of(1), Rational.of(1).floor());
+        assertEquals(Rational.of(3), Rational.of(3).floor());
+        assertEquals(Rational.of(-1), Rational.of(-1).floor());
+        assertEquals(Rational.of(-17), Rational.of(-17).floor());
+
+        assertEquals(Rational.of(0), Rational.of(1, 2).floor());
+        assertEquals(Rational.of(0), Rational.of(1, 3).floor());
+        assertEquals(Rational.of(0), Rational.of(1, 5).floor());
+        assertEquals(Rational.of(0), Rational.of(2, 3).floor());
+        assertEquals(Rational.of(0), Rational.of(4, 5).floor());
+        assertEquals(Rational.of(1), Rational.of(7, 5).floor());
+        assertEquals(Rational.of(4), Rational.of(29, 7).floor());
+        assertEquals(Rational.of(4), Rational.of(99, 24).floor());
+        assertEquals(Rational.of(23), Rational.of(541, 23).floor());
+
+        assertEquals(Rational.of(-1), Rational.of(-1, 2).floor());
+        assertEquals(Rational.of(-1), Rational.of(-1, 3).floor());
+        assertEquals(Rational.of(-1), Rational.of(-1, 5).floor());
+        assertEquals(Rational.of(-1), Rational.of(-2, 3).floor());
+        assertEquals(Rational.of(-1), Rational.of(-4, 5).floor());
+        assertEquals(Rational.of(-2), Rational.of(-7, 5).floor());
+        assertEquals(Rational.of(-5), Rational.of(-29, 7).floor());
+        assertEquals(Rational.of(-5), Rational.of(-99, 24).floor());
+        assertEquals(Rational.of(-24), Rational.of(-541, 23).floor());
+    }
+
+    @Test
+    void testCeil() {
+        assertEquals(Rational.of(0), Rational.of(0).ceil());
+        assertEquals(Rational.of(1), Rational.of(1).ceil());
+        assertEquals(Rational.of(3), Rational.of(3).ceil());
+        assertEquals(Rational.of(-1), Rational.of(-1).ceil());
+        assertEquals(Rational.of(-17), Rational.of(-17).ceil());
+
+        assertEquals(Rational.of(1), Rational.of(1, 2).ceil());
+        assertEquals(Rational.of(1), Rational.of(1, 3).ceil());
+        assertEquals(Rational.of(1), Rational.of(1, 5).ceil());
+        assertEquals(Rational.of(1), Rational.of(2, 3).ceil());
+        assertEquals(Rational.of(1), Rational.of(4, 5).ceil());
+        assertEquals(Rational.of(2), Rational.of(7, 5).ceil());
+        assertEquals(Rational.of(5), Rational.of(29, 7).ceil());
+        assertEquals(Rational.of(5), Rational.of(99, 24).ceil());
+        assertEquals(Rational.of(24), Rational.of(541, 23).ceil());
+
+        assertEquals(Rational.of(0), Rational.of(-1, 2).ceil());
+        assertEquals(Rational.of(0), Rational.of(-1, 3).ceil());
+        assertEquals(Rational.of(0), Rational.of(-1, 5).ceil());
+        assertEquals(Rational.of(0), Rational.of(-2, 3).ceil());
+        assertEquals(Rational.of(0), Rational.of(-4, 5).ceil());
+        assertEquals(Rational.of(-1), Rational.of(-7, 5).ceil());
+        assertEquals(Rational.of(-4), Rational.of(-29, 7).ceil());
+        assertEquals(Rational.of(-4), Rational.of(-99, 24).ceil());
+        assertEquals(Rational.of(-23), Rational.of(-541, 23).ceil());
+    }
+
+    @Test
+    void testRound() {
+        assertEquals(Rational.of(0), Rational.of(0).round());
+        assertEquals(Rational.of(1), Rational.of(1).round());
+        assertEquals(Rational.of(3), Rational.of(3).round());
+        assertEquals(Rational.of(-1), Rational.of(-1).round());
+        assertEquals(Rational.of(-17), Rational.of(-17).round());
+
+        assertEquals(Rational.of(1), Rational.of(1, 2).round());
+        assertEquals(Rational.of(0), Rational.of(1, 3).round());
+        assertEquals(Rational.of(0), Rational.of(1, 5).round());
+        assertEquals(Rational.of(1), Rational.of(2, 3).round());
+        assertEquals(Rational.of(1), Rational.of(4, 5).round());
+        assertEquals(Rational.of(1), Rational.of(7, 5).round());
+        assertEquals(Rational.of(4), Rational.of(29, 7).round());
+        assertEquals(Rational.of(4), Rational.of(99, 24).round());
+        assertEquals(Rational.of(24), Rational.of(541, 23).round());
+
+        assertEquals(Rational.of(-1), Rational.of(-1, 2).round());
+        assertEquals(Rational.of(0), Rational.of(-1, 3).round());
+        assertEquals(Rational.of(0), Rational.of(-1, 5).round());
+        assertEquals(Rational.of(-1), Rational.of(-2, 3).round());
+        assertEquals(Rational.of(-1), Rational.of(-4, 5).round());
+        assertEquals(Rational.of(-1), Rational.of(-7, 5).round());
+        assertEquals(Rational.of(-4), Rational.of(-29, 7).round());
+        assertEquals(Rational.of(-4), Rational.of(-99, 24).round());
+        assertEquals(Rational.of(-24), Rational.of(-541, 23).round());
+
+        assertEquals(Rational.of(2), Rational.of(10, 5).round());
+        assertEquals(Rational.of(2), Rational.of(11, 5).round());
+        assertEquals(Rational.of(2), Rational.of(12, 5).round());
+        assertEquals(Rational.of(3), Rational.of(13, 5).round());
+        assertEquals(Rational.of(3), Rational.of(14, 5).round());
+        assertEquals(Rational.of(3), Rational.of(15, 5).round());
+
+        assertEquals(Rational.of(3), Rational.of(18, 6).round());
+        assertEquals(Rational.of(3), Rational.of(19, 6).round());
+        assertEquals(Rational.of(3), Rational.of(20, 6).round());
+        assertEquals(Rational.of(4), Rational.of(21, 6).round());
+        assertEquals(Rational.of(4), Rational.of(22, 6).round());
+        assertEquals(Rational.of(4), Rational.of(23, 6).round());
+        assertEquals(Rational.of(4), Rational.of(24, 6).round());
+
+        assertEquals(Rational.of(-2), Rational.of(-10, 5).round());
+        assertEquals(Rational.of(-2), Rational.of(-11, 5).round());
+        assertEquals(Rational.of(-2), Rational.of(-12, 5).round());
+        assertEquals(Rational.of(-3), Rational.of(-13, 5).round());
+        assertEquals(Rational.of(-3), Rational.of(-14, 5).round());
+        assertEquals(Rational.of(-3), Rational.of(-15, 5).round());
+
+        assertEquals(Rational.of(-3), Rational.of(-18, 6).round());
+        assertEquals(Rational.of(-3), Rational.of(-19, 6).round());
+        assertEquals(Rational.of(-3), Rational.of(-20, 6).round());
+        assertEquals(Rational.of(-4), Rational.of(-21, 6).round());
+        assertEquals(Rational.of(-4), Rational.of(-22, 6).round());
+        assertEquals(Rational.of(-4), Rational.of(-23, 6).round());
+        assertEquals(Rational.of(-4), Rational.of(-24, 6).round());
     }
 
     @Test
@@ -793,6 +913,273 @@ class RationalTest {
         assertEquals(Rational.of(
                 "467801993911057346969253632393329698441821925792111695787002567703451068793258021745557947676079828499403918483241873884718402/289117532242004794657842939580523992192206081574833651083505729789364385249494747835588176048973824211799073812844695893338801"),
                 x);
+    }
+
+    @Test
+    void testPi() {
+        // Euler's, 1.2 digits per iteration
+        // arccot(2) + arccot(3)
+        // assertEquals(PI_1000, testPi(829, 1000, 1, 2, 1, 3));
+
+        // Hermann's, 1.2 digits per iteration
+        // 2*arccot(2) - arccot(7)
+        // assertEquals(PI_1000, testPi(829, 1000, 2, 2, -1, 7));
+
+        // Hutton's/Vega's, 1.9 digits per iteration
+        // 2*arccot(3) + arccot(7)
+        // assertEquals(PI_1000, testPi(523, 1000, 2, 3, 1, 7));
+
+        // Machin's, 2.8 digits per iteration
+        // 4*arccot(5) - arccot(239)
+        // assertEquals(PI_1000, testPi(357, 1000, 4, 5, -1, 239));
+
+        // Kikuo Takano, 6.8 digits per iteration
+        // 12*arccot(49) + 32*arccot(57) -5*arccot(239) + 12*arccot(110443)
+        // assertEquals(PI_1000, testPi(148, 1000, 12, 49, 32, 57, -5, 239, 12, 110443));
+
+        // F. C. M. Størmer, 7 digits per iteration
+        // 44*arccot(57) + 7*arccot(239) -12*arccot(682) + 24*arccot(12943)
+        // assertEquals(PI_1000, testPi(143, 1000, 44, 57, 7, 239, -12, 682, 24, 12943));
+
+        // Hwang Chien-Lih, 9.5 digits per iteration
+        // 183*arccot(239) + 32*arccot(1023) - 68*arccot(5832) + 12*arccot(110443) - 12*arccot(4841182) - 100*arccot(6826318)
+        // assertEquals(PI_1000, testPi(105, 1000, 183, 239, 32, 1023, -68, 5832, 12, 110443, -12, 4841182, -100, 6826318));
+
+        // Uwe Arndt, 22.2 digits per iteration
+        // assertEquals(PI_1000, testPi(45, 1000, 36462, 390112, 135908, 485298, 274509, 683982, -39581, 1984933, 178477, 2478328, -114569, 3449051,
+        // -146571, 18975991, 61914, 22709274, -69044, 24208144, -89431, 201229582, -43938, 2189376182L));
+
+        // Hwang Chien-Lih, 10.9 digits per iteration
+        // assertEquals(PI_1000, testPi(53, 1000, 36462, 51387, 26522, 485298, 19275, 683982, -3119, 1984933, -3833, 2478328, -5183, 3449051, -37185,
+        // 18975991, -11010, 22709274, 3880, 24208144, -16507, 201229582, -7476, 2189376182L));
+
+        // unknown, 6.2 digits per iteration
+        // 22*arctan(24478/873121) + 17*arctan(685601/69049993)
+        // assertEquals(PI_1000, testPiRational(161, 1000, 22, 24478, 873121, 17, 685601, 69049993));
+
+        // unknown, 9.2 digits per iteration
+        // 44*arctan(74684/14967113) + 139*arctan(1/239) -12*arctan(20138/15351991)
+        assertEquals(PI_1000, testPiRational(109, 1000, 44, 74684, 14967113, 139, 1, 239, -12, 20138, 15351991));
+
+    }
+
+    private String testOld(int iterations, int digits, int... numbers) {
+        long start = System.currentTimeMillis();
+
+        int n = numbers.length / 2;
+
+        Rational sum = Rational.ZERO;
+        Rational number = Rational.of(1);
+
+        Rational[] coefficients = new Rational[n];
+        Rational[] reciprocals = new Rational[n];
+        Rational[] squares = new Rational[n];
+        Rational[] powers = new Rational[n];
+
+        double x = 0.0d;
+
+        for (int i = 0; i < n; i++) {
+            coefficients[i] = Rational.of(numbers[i * 2]);
+            reciprocals[i] = Rational.of(1, numbers[i * 2 + 1]);
+            squares[i] = reciprocals[i].square();
+            powers[i] = reciprocals[i];
+            x += 1 / Math.log10(numbers[i * 2 + 1]);
+        }
+
+        System.out.println("Lehmers measure: " + x);
+
+        for (int i = 0; i < iterations; i++) {
+            Rational s = Rational.ZERO;
+            for (int k = 0; k < n; k++) {
+                s = s.add(coefficients[k].multiply(powers[k]));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            sum = sum.add(s.divide(number));
+            number = number.add(Rational.TWO);
+
+            s = Rational.ZERO;
+            for (int k = 0; k < n; k++) {
+                s = s.subtract(coefficients[k].multiply(powers[k]));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            sum = sum.add(s.divide(number));
+            number = number.add(Rational.TWO);
+
+        }
+
+        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
+        return result;
+    }
+
+    private String testPi(int iterations, int digits, long... numbers) {
+        long start = System.currentTimeMillis();
+
+        int n = numbers.length / 2;
+
+        Rational number = Rational.of(1);
+
+        Rational[] coefficients = new Rational[n];
+        Rational[] reciprocals = new Rational[n];
+        Rational[] squares = new Rational[n];
+        Rational[] powers = new Rational[n];
+        Rational[] sums = new Rational[n];
+
+        double x = 0.0d;
+
+        for (int i = 0; i < n; i++) {
+            coefficients[i] = Rational.of(numbers[i * 2]);
+            reciprocals[i] = Rational.ofReciprocal(numbers[i * 2 + 1]);
+            if (i > 0) {
+                if (numbers[i * 2] > 0) {
+                    System.out.print("+");
+                    if (numbers[i * 2] != 1) {
+                        System.out.print(numbers[i * 2] + "*");
+                    }
+                } else if (numbers[i * 2] == -1) {
+                    System.out.print("-");
+                } else {
+                    System.out.print(numbers[i * 2] + "*");
+                }
+            } else if (numbers[i * 2] != 1) {
+                System.out.print(numbers[i * 2] + "*");
+            }
+            System.out.print("arccot(" + numbers[i * 2 + 1] + ")");
+            squares[i] = reciprocals[i].square();
+            powers[i] = reciprocals[i];
+            sums[i] = Rational.ZERO;
+            x += 1 / Math.log10(numbers[i * 2 + 1]);
+        }
+
+        System.out.println(", Lehmers measure: " + x);
+
+        for (int i = 0; i < iterations; i++) {
+            for (int k = 0; k < n; k++) {
+                sums[k] = sums[k].add(powers[k].divide(number));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            number = number.add(Rational.TWO);
+
+            for (int k = 0; k < n; k++) {
+                sums[k] = sums[k].subtract(powers[k].divide(number));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            number = number.add(Rational.TWO);
+        }
+
+        Rational sum = Rational.ZERO;
+        for (int i = 0; i < n; i++) {
+            sum = sum.add(coefficients[i].multiply(sums[i]));
+        }
+
+        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
+        return result;
+    }
+
+    private String testPiRational(int iterations, int digits, long... numbers) {
+        long start = System.currentTimeMillis();
+
+        int n = numbers.length / 3;
+
+        Rational number = Rational.of(1);
+
+        Rational[] coefficients = new Rational[n];
+        Rational[] reciprocals = new Rational[n];
+        Rational[] squares = new Rational[n];
+        Rational[] powers = new Rational[n];
+        Rational[] sums = new Rational[n];
+
+        double x = 0.0d;
+
+        for (int i = 0; i < n; i++) {
+            coefficients[i] = Rational.of(numbers[i * 3]);
+            reciprocals[i] = Rational.of(numbers[i * 3 + 1], numbers[i * 3 + 2]);
+            if (i > 0) {
+                if (numbers[i * 3] > 0) {
+                    System.out.print("+");
+                    if (numbers[i * 3] != 1) {
+                        System.out.print(numbers[i * 3] + "*");
+                    }
+                } else if (numbers[i * 3] == -1) {
+                    System.out.print("-");
+                } else {
+                    System.out.print(numbers[i * 3] + "*");
+                }
+            } else if (numbers[i * 3] != 1) {
+                System.out.print(numbers[i * 3] + "*");
+            }
+            System.out.print("arctan(" + numbers[i * 3 + 1] + "/" + numbers[i * 3 + 2] + ")");
+            squares[i] = reciprocals[i].square();
+            powers[i] = reciprocals[i];
+            sums[i] = Rational.ZERO;
+            x += 1 / Math.log10(numbers[i * 3 + 2] / numbers[i * 3 + 1]);
+        }
+
+        System.out.println(", Lehmers measure: " + x);
+
+        for (int i = 0; i < iterations; i++) {
+            for (int k = 0; k < n; k++) {
+                sums[k] = sums[k].add(powers[k].divide(number));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            number = number.add(Rational.TWO);
+
+            for (int k = 0; k < n; k++) {
+                sums[k] = sums[k].subtract(powers[k].divide(number));
+                powers[k] = powers[k].multiply(squares[k]);
+            }
+            number = number.add(Rational.TWO);
+        }
+
+        Rational sum = Rational.ZERO;
+        for (int i = 0; i < n; i++) {
+            sum = sum.add(coefficients[i].multiply(sums[i]));
+        }
+
+        String result = sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
+        return result;
+    }
+
+    private String testPi(int iterations, int digits) {
+        // 2,3,1,7
+
+        long start = System.currentTimeMillis();
+
+        Rational sum1 = Rational.ZERO;
+        Rational sum2 = Rational.ZERO;
+        Rational number = Rational.of(1);
+
+        Rational f1 = Rational.of(1, 3);
+        Rational f2 = Rational.of(1, 7);
+        Rational p1 = f1;
+        Rational p2 = f2;
+        Rational s1 = p1.square();
+        Rational s2 = p2.square();
+        Rational two = Rational.TWO;
+
+        for (int i = 0; i < iterations; i++) {
+            sum1 = sum1.add(p1.divide(number));
+            sum2 = sum2.add(p2.divide(number));
+            p1 = p1.multiply(s1);
+            p2 = p2.multiply(s2);
+            number = number.add(two);
+            sum1 = sum1.subtract(p1.divide(number));
+            sum2 = sum2.subtract(p2.divide(number));
+            p1 = p1.multiply(s1);
+            p2 = p2.multiply(s2);
+            number = number.add(two);
+        }
+
+        String result = sum1.redouble().add(sum2).multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
+        return result;
+
     }
 
     /**
