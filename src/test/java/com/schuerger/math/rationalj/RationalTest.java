@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
@@ -587,6 +589,52 @@ class RationalTest {
     }
 
     @Test
+    void testRandomWithDefaultRandomGenerator() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(0));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(-1));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(-17));
+
+        testRandom(7, 4 << 7, null);
+        testRandom(8, 4 << 8, null);
+        testRandom(15, 4 << 15, null);
+        testRandom(16, 4 << 16, null);
+        testRandom(63, 1 << 12, null);
+        testRandom(64, 1 << 12, null);
+        testRandom(512, 1 << 10, null);
+    }
+
+    @Test
+    void testRandomWithRandomGenerator() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(0));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(-1));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(-17));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(7, null));
+        assertThrows(IllegalArgumentException.class, () -> Rational.random(0, null));
+
+        Random random = new SecureRandom();
+
+        testRandom(7, 4 << 7, random);
+        testRandom(8, 4 << 8, random);
+        testRandom(15, 4 << 15, random);
+        testRandom(16, 4 << 16, random);
+        testRandom(63, 1 << 12, random);
+        testRandom(64, 1 << 12, random);
+        testRandom(512, 1 << 10, random);
+    }
+
+    private void testRandom(int bits, int iterations, Random random) {
+        BigInteger maxDenominator = BigInteger.ONE.shiftLeft(bits);
+        for (int i = 0; i < iterations; i++) {
+            Rational rational = random != null ? Rational.random(bits, random) : Rational.random(bits);
+            assertTrue(rational.compareTo(Rational.ZERO) >= 0);
+            assertTrue(rational.compareTo(Rational.ONE) < 0);
+            assertTrue(rational.denominator().compareTo(maxDenominator) <= 0);
+            // check if denominator is a power of 2
+            assertEquals(BigInteger.ZERO, rational.denominator().and(rational.denominator().subtract(BigInteger.ONE)));
+        }
+    }
+
+    @Test
     void testToInteger() {
         assertEquals(BigInteger.ZERO, Rational.ZERO.toInteger());
         assertEquals(BigInteger.ONE, Rational.ONE.toInteger());
@@ -1043,7 +1091,7 @@ class RationalTest {
             x += 1 / Math.log10(numbers[i * 2 + 1]);
         }
 
-        System.out.println(", Lehmers measure: " + x);
+        System.out.println(", Lehmer measure: " + x);
 
         for (int i = 0; i < iterations; i++) {
             for (int k = 0; k < n; k++) {
@@ -1113,7 +1161,7 @@ class RationalTest {
             x += 1 / Math.log10(numbers[i * 3 + 2] / numbers[i * 3 + 1]);
         }
 
-        System.out.println(", Lehmers measure: " + x);
+        System.out.println(", Lehmer measure: " + x);
 
         for (int i = 0; i < iterations; i++) {
             for (int k = 0; k < n; k++) {

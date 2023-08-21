@@ -20,6 +20,8 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Implements an immutable arbitrary-scale rational number based on BigInteger numerators and denominators. The rational numbers are always stored in
@@ -1153,6 +1155,42 @@ public class Rational extends Number implements Comparable<Rational> {
         } else {
             return reciprocal().gcd(other.reciprocal()).reciprocal();
         }
+    }
+
+    /**
+     * Returns a uniformly distributed random Rational from the rational set {0, 1/2^bits, ..., (2^bits-1)/2^bits}, i.e. a Rational from the quantized
+     * interval [0,1) using a quantization of 1/2^bits. A default thread-safe non-cryptographic random generator is used.
+     *
+     * @param bits the quantization of the Rational, given in bits
+     *
+     * @return the random Rational
+     */
+    public static Rational random(int bits) {
+        return random(bits, ThreadLocalRandom.current());
+    }
+
+    /**
+     * Returns a uniformly distributed random Rational from the rational set {0, 1/2^bits, ..., (2^bits-1)/2^bits}, i.e. a Rational from the quantized
+     * interval [0,1) using a quantization of 1/2^bits. The given random generator is used.
+     *
+     * @param bits the quantization of the Rational, given in bits
+     * @param random the random generator to use
+     *
+     * @return the random Rational
+     */
+    public static Rational random(int bits, Random random) {
+        if (bits <= 0) {
+            throw new IllegalArgumentException("bits must be > 0");
+        }
+
+        if (random == null) {
+            throw new IllegalArgumentException("random must not be null");
+        }
+
+        byte[] mag = new byte[bits / 8 + 1];
+        mag[0] = (byte) (1 << (bits & 7));
+
+        return Rational.of(new BigInteger(bits, random), new BigInteger(1, mag));
     }
 
     /**
