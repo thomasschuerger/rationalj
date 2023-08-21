@@ -1072,26 +1072,26 @@ class RationalTest {
             reciprocals[i] = Rational.ofReciprocal(numbers[i * 2 + 1]);
             if (i > 0) {
                 if (numbers[i * 2] > 0) {
-                    System.out.print("+");
+                    // System.out.print("+");
                     if (numbers[i * 2] != 1) {
-                        System.out.print(numbers[i * 2] + "*");
+                        // System.out.print(numbers[i * 2] + "*");
                     }
                 } else if (numbers[i * 2] == -1) {
-                    System.out.print("-");
+                    // System.out.print("-");
                 } else {
-                    System.out.print(numbers[i * 2] + "*");
+                    // System.out.print(numbers[i * 2] + "*");
                 }
             } else if (numbers[i * 2] != 1) {
-                System.out.print(numbers[i * 2] + "*");
+                // System.out.print(numbers[i * 2] + "*");
             }
-            System.out.print("arccot(" + numbers[i * 2 + 1] + ")");
+            // System.out.print("arccot(" + numbers[i * 2 + 1] + ")");
             squares[i] = reciprocals[i].square();
             powers[i] = reciprocals[i];
             sums[i] = Rational.ZERO;
             x += 1 / Math.log10(numbers[i * 2 + 1]);
         }
 
-        System.out.println(", Lehmer measure: " + x);
+        // System.out.println(", Lehmer measure: " + x);
 
         for (int i = 0; i < iterations; i++) {
             for (int k = 0; k < n; k++) {
@@ -1142,26 +1142,26 @@ class RationalTest {
             reciprocals[i] = Rational.of(numbers[i * 3 + 1], numbers[i * 3 + 2]);
             if (i > 0) {
                 if (numbers[i * 3] > 0) {
-                    System.out.print("+");
+                    // System.out.print("+");
                     if (numbers[i * 3] != 1) {
-                        System.out.print(numbers[i * 3] + "*");
+                        // System.out.print(numbers[i * 3] + "*");
                     }
                 } else if (numbers[i * 3] == -1) {
-                    System.out.print("-");
+                    // System.out.print("-");
                 } else {
-                    System.out.print(numbers[i * 3] + "*");
+                    // System.out.print(numbers[i * 3] + "*");
                 }
             } else if (numbers[i * 3] != 1) {
-                System.out.print(numbers[i * 3] + "*");
+                // System.out.print(numbers[i * 3] + "*");
             }
-            System.out.print("arctan(" + numbers[i * 3 + 1] + "/" + numbers[i * 3 + 2] + ")");
+            // System.out.print("arctan(" + numbers[i * 3 + 1] + "/" + numbers[i * 3 + 2] + ")");
             squares[i] = reciprocals[i].square();
             powers[i] = reciprocals[i];
             sums[i] = Rational.ZERO;
             x += 1 / Math.log10(numbers[i * 3 + 2] / numbers[i * 3 + 1]);
         }
 
-        System.out.println(", Lehmer measure: " + x);
+        // System.out.println(", Lehmer measure: " + x);
 
         for (int i = 0; i < iterations; i++) {
             for (int k = 0; k < n; k++) {
