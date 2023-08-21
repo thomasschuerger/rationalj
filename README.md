@@ -64,6 +64,11 @@ Integer `Rational`s can be created as follows:
 - `Rational.of(BigInteger integer)`
 - `Rational.of(String string)` (using "`<integer>`", e.g. "`247`")
 
+Random `Rational`s can be created as follows:
+
+- `Rational.random(int bits)`
+- `Rational.random(int bits, Random random)`
+
 ## Methods on `Rational`s
 
 ### Getters
@@ -80,6 +85,9 @@ Integer `Rational`s can be created as follows:
 - `square() - Rational`
 - `signum() - int`
 - `abs() - Rational`
+- `floor() - Rational`
+- `ceil() - Rational`
+- `round() - Rational`
 
 ### Binary operators
 
