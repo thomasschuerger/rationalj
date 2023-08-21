@@ -178,6 +178,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * other integers are non-negative.
      *
      * @return the array of integers
+     *
+     * @since 1.1.0
      */
     public BigInteger[] toContinuedFraction() {
         if (isInteger) {
@@ -235,6 +237,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the array of integers is empty
+     *
+     * @since 1.1.0
      */
     public static Rational ofContinuedFraction(BigInteger... integers) {
         int len = integers.length;
@@ -256,6 +260,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns the numerator of this Rational.
      *
      * @return the numerator
+     *
+     * @since 1.0.0
      */
     public BigInteger numerator() {
         return numerator;
@@ -265,6 +271,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns the denominator of this Rational.
      *
      * @return the denominator
+     *
+     * @since 1.0.0
      */
     public BigInteger denominator() {
         return denominator;
@@ -278,8 +286,9 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the string contains more than one '/' character or if the denominator is 0
+     *
+     * @since 1.0.0
      */
-
     public static Rational of(String string) {
         int p = string.indexOf('/');
 
@@ -305,6 +314,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the denominator is 0
+     *
+     * @since 1.0.0
      */
     public static Rational of(int numerator, int denominator) {
         if (denominator == 0) {
@@ -328,6 +339,7 @@ public class Rational extends Number implements Comparable<Rational> {
      *
      * @throws IllegalArgumentException if the denominator is 0
      *
+     * @since 1.0.0
      */
     public static Rational of(long numerator, long denominator) {
         if (denominator == 0) {
@@ -350,6 +362,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the denominator is 0
+     *
+     * @since 1.0.0
      */
     public static Rational of(BigInteger numerator, BigInteger denominator) {
         if (denominator.signum() == 0) {
@@ -369,6 +383,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the integer
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational of(int integer) {
         switch (integer) {
@@ -393,6 +409,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the integer
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational of(long integer) {
         if (integer == 0) {
@@ -416,6 +434,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the integer
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational of(BigInteger integer) {
         if (integer.signum() == 0) {
@@ -439,6 +459,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the denominator is 0
+     *
+     * @since 1.2.0
      */
     public static Rational ofReciprocal(int denominator) {
         switch (denominator) {
@@ -471,6 +493,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the denominator is 0
+     *
+     * @since 1.2.0
      */
     public static Rational ofReciprocal(long denominator) {
         if (denominator == 0L) {
@@ -501,6 +525,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the Rational
      *
      * @throws IllegalArgumentException if the denominator is 0
+     *
+     * @since 1.2.0
      */
     public static Rational ofReciprocal(BigInteger denominator) {
         int signum = denominator.signum();
@@ -526,6 +552,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns true if this Rational is an integer, false otherwise.
      *
      * @return true or false
+     *
+     * @since 1.0.0
      */
     public boolean isInteger() {
         return isInteger;
@@ -535,6 +563,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a BigInteger that represents this Rational, rounding towards zero.
      *
      * @return a BigInteger that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     public BigInteger toInteger() {
         if (isInteger) {
@@ -549,6 +579,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * int.
      *
      * @return an int that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     @Override
     public int intValue() {
@@ -564,6 +596,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * long.
      *
      * @return a long that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     @Override
     public long longValue() {
@@ -579,6 +613,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * scale of 100 and RoundingMode.DOWN.
      *
      * @return a BigDecimal that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     public BigDecimal toDecimal() {
         if (isInteger) {
@@ -596,6 +632,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param roundingMode the rounding mode (e.g. RoundingMode.DOWN)
      *
      * @return a BigDecimal that is a rounded representation of this Rational
+     *
+     * @since 1.1.0
      */
     public BigDecimal toDecimal(int scale, RoundingMode roundingMode) {
         if (isInteger) {
@@ -610,6 +648,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * precision may be lost.
      *
      * @return a double that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     @Override
     public double doubleValue() {
@@ -621,6 +661,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * precision may be lost.
      *
      * @return a float that is a rounded representation of this Rational
+     *
+     * @since 1.0.0
      */
     @Override
     public float floatValue() {
@@ -633,6 +675,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational
      *
      * @return the sum of this and other
+     *
+     * @since 1.0.0
      */
     public Rational add(Rational other) {
         if (signum == 0) {
@@ -656,6 +700,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational
      *
      * @return the difference of this and other
+     *
+     * @since 1.0.0
      */
     public Rational subtract(Rational other) {
         if (signum == 0) {
@@ -679,6 +725,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other rational
      *
      * @return the product of this and other
+     *
+     * @since 1.0.0
      */
     public Rational multiply(Rational other) {
         if (signum == 0 || other.signum == 0) {
@@ -704,6 +752,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the quotient of this and other
      *
      * @throws IllegalArgumentException if other is 0
+     *
+     * @since 1.0.0
      */
     public Rational divide(Rational other) {
         if (other.signum == 0) {
@@ -729,6 +779,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the quotient of this and other
      *
      * @throws IllegalArgumentException if other is 0
+     *
+     * @since 1.0.0
      */
     public BigInteger divideInteger(Rational other) {
         if (other.signum == 0) {
@@ -761,6 +813,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return an Object array with a BigInteger and a Rational
      *
      * @throws IllegalArgumentException if other is 0
+     *
+     * @since 1.0.0
      */
     public Number[] divideIntegerAndRemainder(Rational other) {
         if (other.signum == 0) {
@@ -796,6 +850,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return this modulo other
      *
      * @throws IllegalArgumentException if other is 0
+     *
+     * @since 1.1.0
      */
     public Rational mod(Rational other) {
         if (other.signum == 0) {
@@ -823,6 +879,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns the signum of this Rational. Returns -1 if negative, 0 if zero, 1 if positive.
      *
      * @return the signum
+     *
+     * @since 1.0.0
      */
     public int signum() {
         return signum;
@@ -832,6 +890,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents the negation of this Rational.
      *
      * @return the negation
+     *
+     * @since 1.0.0
      */
     public Rational negate() {
         if (signum == 0) {
@@ -850,6 +910,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return true or false
+     *
+     * @since 1.1.0
      */
     public boolean isNegationOf(Rational other) {
         if (signum == 0 && other.signum == 0) {
@@ -863,6 +925,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents the absolute value of this Rational.
      *
      * @return the negation
+     *
+     * @since 1.0.0
      */
     public Rational abs() {
         if (signum >= 0) {
@@ -878,6 +942,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the reciprocal
      *
      * @throws IllegalArgumentException if this Rational is 0
+     *
+     * @since 1.0.0
      */
     public Rational reciprocal() {
         switch (signum) {
@@ -902,6 +968,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return true or false
+     *
+     * @since 1.1.0
      */
     public boolean isReciprocalOf(Rational other) {
         switch (signum) {
@@ -921,6 +989,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return the minimum of the two Rationals
+     *
+     * @since 1.0.0
      */
     public Rational min(Rational other) {
         if (compareTo(other) <= 0) {
@@ -936,6 +1006,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return the maximum of the two Rationals
+     *
+     * @since 1.0.0
      */
     public Rational max(Rational other) {
         if (compareTo(other) <= 0) {
@@ -949,6 +1021,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns the square of this Rational.
      *
      * @return the reciprocal
+     *
+     * @since 1.0.0
      */
     public Rational square() {
         if (signum == 0) {
@@ -968,6 +1042,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @return the power'th power of this Rational
      *
      * @throws IllegalArgumentException if this Rational is 0 and the power is not positive
+     *
+     * @since 1.0.0
      */
     public Rational pow(int power) {
         if (power == 0) {
@@ -1007,6 +1083,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational which is twice this Rational.
      *
      * @return twice of this Rational
+     *
+     * @since 1.1.0
      */
     public Rational redouble() {
         if (signum == 0) {
@@ -1031,6 +1109,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational which is half of this Rational.
      *
      * @return half of this Rational
+     *
+     * @since 1.1.0
      */
     public Rational halve() {
         if (signum == 0) {
@@ -1056,6 +1136,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * down to the previous integer.
      *
      * @return the floor of this Rational
+     *
+     * @since 1.3.0
      */
     public Rational floor() {
         if (isInteger) {
@@ -1072,6 +1154,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * up to the next integer.
      *
      * @return the ceiling of this Rational
+     *
+     * @since 1.3.0
      */
     public Rational ceil() {
         if (isInteger) {
@@ -1087,7 +1171,9 @@ public class Rational extends Number implements Comparable<Rational> {
      * Returns a Rational that represents the integer closest to this Rational. In case of a tie, rounds towards infinity for positive numbers and
      * towards minus infinity for negative numbers.
      *
-     * @return the
+     * @return the rounded Rational
+     *
+     * @since 1.3.0
      */
     public Rational round() {
         if (isInteger) {
@@ -1117,6 +1203,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return the GCD of this and the other Rational
+     *
+     * @since 1.0.0
      */
     public Rational gcd(Rational other) {
         if (this.equals(other)) {
@@ -1146,6 +1234,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param other the other Rational
      *
      * @return the LCM of this and the other Rational
+     *
+     * @since 1.1.0
      */
     public Rational lcm(Rational other) {
         if (signum == 0 || other.signum == 0) {
@@ -1164,6 +1254,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param bits the quantization of the Rational, given in bits
      *
      * @return the random Rational
+     *
+     * @since 1.3.0
      */
     public static Rational random(int bits) {
         return random(bits, ThreadLocalRandom.current());
@@ -1177,6 +1269,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param random the random generator to use
      *
      * @return the random Rational
+     *
+     * @since 1.3.0
      */
     public static Rational random(int bits, Random random) {
         if (bits <= 0) {
@@ -1199,6 +1293,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the integer
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational valueOf(int integer) {
         return Rational.of(integer);
@@ -1210,6 +1306,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the long
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational valueOf(long integer) {
         return Rational.of(integer);
@@ -1221,6 +1319,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param integer the integer
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational valueOf(BigInteger integer) {
         return Rational.of(integer);
@@ -1233,6 +1333,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * @param string the string
      *
      * @return the Rational
+     *
+     * @since 1.0.0
      */
     public static Rational valueOf(String string) {
         return Rational.of(string);
@@ -1243,6 +1345,8 @@ public class Rational extends Number implements Comparable<Rational> {
      * consists of the numerator, followed by a slash, followed by the denominator.
      *
      * @return the string representation
+     *
+     * @since 1.0.0
      */
     @Override
     public String toString() {
