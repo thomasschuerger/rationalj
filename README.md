@@ -28,7 +28,7 @@ RationalJ is licensed under the Apache License 2.0. See file [LICENSE](LICENSE) 
 
 # Prerequisites
 
-Java 8 or later is required. The library would also work with Java 5, but the unit tests currently require Java 8. Note that even Java 8 is already pretty old (released 2014).
+Java 8 or later is required. The library would also work with Java 5, but the unit tests currently require Java 8.
 
 Maven 3.6.0 or later is required for building the library.
 
@@ -173,14 +173,14 @@ to build and install the JAR file into your local Maven repository.
 <dependency>
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
 ## Gradle
 
 ```gradle
-implementation 'com.schuerger.math:rationalj:1.2.0'
+implementation 'com.schuerger.math:rationalj:1.3.0'
 ```
 
 # Examples
