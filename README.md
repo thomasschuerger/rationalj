@@ -155,7 +155,7 @@ git checkout master
 
 # Build
 
-RationalJ uses Maven.
+RationalJ requires Maven 3.2.5 or higher for building.
 
 Run
 
@@ -171,7 +171,7 @@ Run
 mvn clean install -DskipTests
 ```
 
-to do the same, but skipping the compilation and execution of unit tests.
+to do the same, but skipping the execution of unit tests.
 
 # Integrate
 
