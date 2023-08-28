@@ -1,6 +1,6 @@
 # RationalJ
 
-RationalJ is a lightweight Java library for rational numbers. It is lightweight because it has no external dependencies and as of now only consists of a single class.
+RationalJ is a lightweight Java library for rational number arithmetic. It is lightweight because it has no external dependencies and as of now only consists of a single class.
 
 The library manages rational numbers using arbitrary integer precision for numerators and denominators. RationalJ internally uses `BigInteger`, therefore the maximum magnitude for numerators and denominators is 2^2147483647-1, which is indeed *big*.
 
@@ -9,7 +9,7 @@ Rational numbers are implemented by the class `Rational`, which extends `Number`
 Upon creation, `Rational`s are automatically brought into canonical form:
 
 - numerators and denominators are always made coprime (making the `Rational` fully reduced)
-- if denominators are negative, the signs of the numerators and denominators each are switched
+- if denominators are negative, the signs of the numerators and denominators are switched each
 - zero uses a numerator of 0 and a denominator of 1 
 
 Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal. Working in canonical form makes sure that computations use smaller numbers and allows for certain optimizations.
@@ -252,12 +252,12 @@ do {
 Output:
 
 ```
-k:                      1  sum: 1.000000000000000000000000000000 1
-k:                     13  sum: 1.076923076923076923076923076923 14/13
-k:                    172  sum: 1.082737030411449016100178890877 2421/2236
-k:                  46318  sum: 1.082758620290113898003542593973 56069057/51783524
-k:             2502870327  sum: 1.082758620689655172360582026803 140333579079955163/129607445647092348
-k:   18793079618828390460  sum: 1.082758620689655172413793103448 157/145
+k:                    1  sum: 1.000000000000000000000000000000 1
+k:                   13  sum: 1.076923076923076923076923076923 14/13
+k:                  172  sum: 1.082737030411449016100178890877 2421/2236
+k:                46318  sum: 1.082758620290113898003542593973 56069057/51783524
+k:           2502870327  sum: 1.082758620689655172360582026803 140333579079955163/129607445647092348
+k: 18793079618828390460  sum: 1.082758620689655172413793103448 157/145
 ```
 
 Now we know that 157/145 = 1/1 + 1/13 + 1/172 + 1/46318 + 1/2502870327 + 1/18793079618828390460.
