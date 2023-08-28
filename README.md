@@ -163,7 +163,15 @@ Run
 mvn clean install
 ```
 
-to build and install the JAR file into your local Maven repository.
+to build RationalJ and install it into your local Maven repository.
+
+Run
+
+```bash
+mvn clean install -DskipTests
+```
+
+to do the same, but skipping the compilation and execution of unit tests.
 
 # Integrate
 
@@ -220,35 +228,39 @@ Output:
 // unused unit fraction that does not let the sum exceed the target; this must eventually
 // end, but the denominators can grow very big when close to the target
 
-Rational target = Rational.of(47, 29);
-Rational sum = Rational.ZERO;
+// naturally, the first x summands are from the partial sum of the Harmonic series,
+// where x is floor(e^(target-gamma)-1/2) with gamma being the Euler-Mascheroni constant
+
+Rational target = Rational.of(157, 145);
 Rational diffToTarget = target;
+Rational sum = Rational.ZERO;
 BigInteger k = BigInteger.ZERO;
 
 do {
-    // increase k to the smallest k' > k such that sum + 1/k' <= target
+    // increase k to the smallest k' > k such that sum + 1/k' <= target, but at least by 1
     Rational x = diffToTarget.reciprocal();
     BigInteger kprime = x.isInteger() ? x.toInteger() : x.toInteger().add(BigInteger.ONE);
     k = kprime.compareTo(k) <= 0 ? k.add(BigInteger.ONE) : kprime;
 
-    sum = sum.add(Rational.of(BigInteger.ONE, k));
+    sum = sum.add(Rational.ofReciprocal(k));
     diffToTarget = target.subtract(sum);
 
-    System.out.printf("k: %6d  sum: %32.30f %s\n", k, sum.toDecimal(), sum);
+    System.out.printf("k: %22d  sum: %32.30f %s%n", k, sum.toDecimal(), sum);
 } while (diffToTarget.signum() > 0);
 ```
 
 Output:
 
 ```
-k:      1  sum: 1.000000000000000000000000000000 1
-k:      2  sum: 1.500000000000000000000000000000 3/2
-k:      9  sum: 1.611111111111111111111111111111 29/18
-k:    105  sum: 1.620634920634920634920634920635 1021/630
-k:  18270  sum: 1.620689655172413793103448275862 47/29
+k:                      1  sum: 1.000000000000000000000000000000 1
+k:                     13  sum: 1.076923076923076923076923076923 14/13
+k:                    172  sum: 1.082737030411449016100178890877 2421/2236
+k:                  46318  sum: 1.082758620290113898003542593973 56069057/51783524
+k:             2502870327  sum: 1.082758620689655172360582026803 140333579079955163/129607445647092348
+k:   18793079618828390460  sum: 1.082758620689655172413793103448 157/145
 ```
 
-Now we know that 47/29 = 1/1 + 1/2 + 1/9 + 1/105 + 1/18270.
+Now we know that 157/145 = 1/1 + 1/13 + 1/172 + 1/46318 + 1/2502870327 + 1/18793079618828390460.
 
 # FAQ
 ## Shouldn't the class be called `BigRational` instead of `Rational`?
