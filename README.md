@@ -121,6 +121,10 @@ Random `Rational`s can be created as follows:
 - `toDecimal(int scale, RoundingMode roundingMode) - BigDecimal`
 - `toContinuedFraction() - BigInteger[]`
 
+# Javadoc
+
+RationalJ's Javadoc is available [here](https://javadoc.io/doc/com.schuerger.math/rationalj).
+
 # Git
 
 ## Clone the repository
