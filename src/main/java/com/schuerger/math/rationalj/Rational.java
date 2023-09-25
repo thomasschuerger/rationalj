@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Implements an immutable arbitrary-scale rational number based on BigInteger numerators and denominators. The rational numbers are always stored in
@@ -92,6 +94,12 @@ public class Rational extends Number implements Comparable<Rational> {
 
     /** True iff this Rational is equal to one. */
     private final boolean isOne;
+
+    /** Matches strings of the form "<integer>" or "<numerator>/<denominator>". */
+    private static final Pattern FRACTION_PATTERN = Pattern.compile("^(-?\\d+)(?:/(-?\\d+))?$");
+
+    /** Matches strings of the form "<integer-part>.<fractional_part>" or "<integer-part>.<fractional_part>_<repeating-fractional-part>". */
+    private static final Pattern DECIMAL_PATTERN = Pattern.compile("^(-?\\d+)\\.(\\d*?)(?:0*|_(\\d*)?)$"); // NOSONAR
 
     /**
      * Creates an integer Rational from the given integer.
@@ -279,29 +287,70 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a Rational based on the given string.
+     * Returns a Rational based on the given string. The string can either be provided in the form "<integer>", "<numerator>/<denominator>",
+     * "<integer-part>.<fractional-part>" or "<integer-part>".<fractional-part>_<repeating-fractional-part>". The fractional part and/or the repeating
+     * fractional part can also be empty. Any part, except the fractional part and the repeating fractional part, can be negated by prepending it with
+     * a "-".
      *
      * @param string the string
      *
      * @return the Rational
      *
-     * @throws IllegalArgumentException if the string contains more than one '/' character or if the denominator is 0
+     * @throws IllegalArgumentException if the string doesn't match the expected syntax or the denominator is zero
      *
      * @since 1.0.0
      */
     public static Rational of(String string) {
-        int p = string.indexOf('/');
-
-        if (p < 0) {
-            return Rational.of(new BigInteger(string));
-        } else {
-            int p2 = string.lastIndexOf('/');
-
-            if (p == p2) {
-                return Rational.of(new BigInteger(string.substring(0, p)), new BigInteger(string.substring(p + 1)));
+        Matcher matcher = FRACTION_PATTERN.matcher(string);
+        if (matcher.matches()) {
+            if (matcher.group(2) != null) {
+                return Rational.of(new BigInteger(matcher.group(1)), new BigInteger(matcher.group(2)));
             } else {
-                throw new IllegalArgumentException("Zero or one '/' expected");
+                return Rational.of(new BigInteger(matcher.group(1)));
             }
+        }
+
+        matcher = DECIMAL_PATTERN.matcher(string);
+
+        if (matcher.matches()) {
+            int fixedLength = matcher.group(2).length();
+            int repeatingLength = matcher.group(3) != null ? matcher.group(3).length() : 0;
+            if (repeatingLength > 0) {
+                if (fixedLength == 0) {
+                    // no fixed but repeating decimal digits
+                    BigInteger repeatingDenominator = BigInteger.TEN.pow(repeatingLength).subtract(BigInteger.ONE);
+                    Rational fixedRational = Rational.of(new BigInteger(matcher.group(1)));
+                    Rational repeatingRational = Rational.of(new BigInteger(matcher.group(3)), repeatingDenominator);
+                    // we need subtraction for a negative zero (e.g. "-0._123")
+                    if (fixedRational.signum() >= 0 && !string.startsWith("-")) {
+                        return fixedRational.add(repeatingRational);
+                    } else {
+                        return fixedRational.subtract(repeatingRational);
+                    }
+                } else {
+                    // fixed and repeating decimal digits
+                    String str = matcher.group(1) + matcher.group(2);
+                    BigInteger fixedDenominator = BigInteger.TEN.pow(fixedLength);
+                    BigInteger repeatingDenominator = BigInteger.TEN.pow(repeatingLength).subtract(BigInteger.ONE).multiply(fixedDenominator);
+                    Rational fixedRational = Rational.of(new BigInteger(str), fixedDenominator);
+                    Rational repeatingRational = Rational.of(new BigInteger(matcher.group(3)), repeatingDenominator);
+                    if (fixedRational.signum() >= 0) {
+                        return fixedRational.add(repeatingRational);
+                    } else {
+                        return fixedRational.subtract(repeatingRational);
+                    }
+                }
+            } else if (fixedLength == 0) {
+                // no fixed and no repeating decimal digits
+                return Rational.of(new BigInteger(matcher.group(1)));
+            } else {
+                // fixed but no repeating decimal digits
+                String str = matcher.group(1) + matcher.group(2);
+                BigInteger fixedDenominator = BigInteger.TEN.pow(fixedLength);
+                return Rational.of(new BigInteger(str), fixedDenominator);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid syntax: \"" + string + "\"");
         }
     }
 

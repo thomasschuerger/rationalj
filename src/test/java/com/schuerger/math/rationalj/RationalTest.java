@@ -40,35 +40,73 @@ class RationalTest {
     private static final String PI_1000 = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989";
 
     @Test
+    void testOfString() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("7/0"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("5/7/"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of(""));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("abc"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("abc/def"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("123/def"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("abc/456"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("123,456"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.567#5a"));
+
+        assertEquals(Rational.of(0), Rational.of("0"));
+        assertEquals(Rational.of(-1), Rational.of("-1"));
+        assertEquals(Rational.of(12345), Rational.of("12345"));
+        assertEquals(Rational.of(-87654321), Rational.of("-87654321"));
+        assertEquals(Rational.of(5, 7), Rational.valueOf("5/7"));
+        assertEquals(Rational.of(5, 7), Rational.of("-5/-7"));
+        assertEquals(Rational.of(34, 57), Rational.valueOf("850/1425"));
+        assertEquals(Rational.of(-34, 57), Rational.valueOf("850/-1425"));
+        assertEquals(Rational.of(5), Rational.of("5."));
+        assertEquals(Rational.of(-18), Rational.of("-18."));
+        assertEquals(Rational.of(277), Rational.of("277.00000000"));
+        assertEquals(Rational.of(-444), Rational.of("-444.00000"));
+        assertEquals(Rational.of(1, 1000000), Rational.of("0.000001"));
+        assertEquals(Rational.of(-100001, 1000000), Rational.of("-0.100001"));
+        assertEquals(Rational.of(62831853, 20000000), Rational.of("3.14159265"));
+        assertEquals(Rational.of(13333333, 10000000), Rational.of("1.3333333"));
+        assertEquals(Rational.of(0), Rational.of("0._"));
+        assertEquals(Rational.of(0), Rational.of("-0._"));
+        assertEquals(Rational.of(2, 9), Rational.of("0._2"));
+        assertEquals(Rational.of(-23, 99), Rational.of("-0._23"));
+        assertEquals(Rational.of(4, 3), Rational.of("1._3"));
+        assertEquals(Rational.of(4, 3), Rational.of("1._33"));
+        assertEquals(Rational.of(4, 3), Rational.of("1._333"));
+        assertEquals(Rational.of(-5, 3), Rational.of("-1._6"));
+        assertEquals(Rational.of(-5, 3), Rational.of("-1._666"));
+        assertEquals(Rational.of(33, 7), Rational.of("4._714285"));
+        assertEquals(Rational.of(-1, 7), Rational.of("-0._142857"));
+        assertEquals(Rational.of(4), Rational.of("4._"));
+        assertEquals(Rational.of(41, 10), Rational.of("4.1_"));
+        assertEquals(Rational.of(-3), Rational.of("-3._"));
+        assertEquals(Rational.of(-31, 10), Rational.of("-3.1_"));
+        assertEquals(Rational.of(120296611, 2499750), Rational.of("48.123_4567"));
+        assertEquals(Rational.of(-274348422475994513L, 277777777750000L), Rational.of("-987.6543210_1234567890"));
+        assertEquals(Rational.of(1234567890123456789L, 100000000000000L), Rational.of("12345.67890123456789"));
+        assertEquals(Rational.of(-1234567890123456789L, 100000000000000L), Rational.of("-12345.67890123456789"));
+        assertEquals(Rational.of(1234567890123456789L, 100000000000000L), Rational.of("12345.678901234567890000000000"));
+        assertEquals(Rational.of(-1234567890123456789L, 100000000000000L), Rational.of("-12345.678901234567890000000000"));
+    }
+
+    @Test
     void testOf() {
         assertThrows(IllegalArgumentException.class, () -> Rational.of(0, 0));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(1, 0));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(-1, 0));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(5, 0));
-        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0));
 
         assertThrows(IllegalArgumentException.class, () -> Rational.of(0L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(1L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(-1L, 0L));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(5L, 0L));
-        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0L));
 
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ZERO, BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ONE, BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.ONE.negate(), BigInteger.ZERO));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(BigInteger.valueOf(5), BigInteger.ZERO));
-        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(BigInteger.ZERO));
 
-        assertThrows(IllegalArgumentException.class, () -> Rational.of("5/7/"));
-        assertThrows(NumberFormatException.class, () -> Rational.of(""));
-        assertThrows(NumberFormatException.class, () -> Rational.of("abc"));
-        assertThrows(NumberFormatException.class, () -> Rational.of("abc/def"));
-        assertThrows(NumberFormatException.class, () -> Rational.of("123/def"));
-        assertThrows(NumberFormatException.class, () -> Rational.of("abc/456"));
-
-        assertEquals(Rational.of(5, 7), Rational.valueOf("5/7"));
-        assertEquals(Rational.of(5, 7), Rational.of("-5/-7"));
-        assertEquals(Rational.of(12345), Rational.of("12345"));
         assertEquals(Rational.MINUS_ONE, Rational.of(-1));
         assertEquals(Rational.MINUS_ONE, Rational.of(-1, 1));
         assertEquals(Rational.MINUS_ONE, Rational.of(-1L));
@@ -91,6 +129,13 @@ class RationalTest {
         assertEquals(Rational.TEN, Rational.of(10));
         assertEquals(Rational.TEN, Rational.of(10L));
         assertEquals(Rational.TEN, Rational.of(BigInteger.valueOf(10)));
+    }
+
+    @Test
+    void testOfReciprocal() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0L));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(0));
+        assertThrows(IllegalArgumentException.class, () -> Rational.ofReciprocal(BigInteger.ZERO));
 
         assertEquals(Rational.ONE, Rational.ofReciprocal(1));
         assertEquals(Rational.ONE, Rational.ofReciprocal(1L));
