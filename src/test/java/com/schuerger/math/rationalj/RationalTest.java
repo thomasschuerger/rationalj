@@ -1,4 +1,4 @@
-/* Copyright 2021 Thomas Schuerger (thomas@schuerger.com)
+/* Copyright 2023 Thomas Schuerger (thomas@schuerger.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ class RationalTest {
 
     @Test
     void testOfString() {
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("125-125"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("125-"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("12*5"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("7/0"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("5/7/"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of(""));
@@ -50,6 +53,7 @@ class RationalTest {
         assertThrows(IllegalArgumentException.class, () -> Rational.of("abc/456"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("123,456"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.567#5a"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.567_123+4"));
 
         assertEquals(Rational.of(0), Rational.of("0"));
         assertEquals(Rational.of(-1), Rational.of("-1"));

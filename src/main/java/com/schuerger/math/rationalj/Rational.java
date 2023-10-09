@@ -1,4 +1,4 @@
-/* Copyright 2021 Thomas Schuerger (thomas@schuerger.com)
+/* Copyright 2023 Thomas Schuerger (thomas@schuerger.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Implements an immutable arbitrary-scale rational number based on BigInteger numerators and denominators. The rational numbers are always stored in
@@ -94,12 +92,6 @@ public class Rational extends Number implements Comparable<Rational> {
 
     /** True iff this Rational is equal to one. */
     private final boolean isOne;
-
-    /** Matches strings of the form "<integer>" or "<numerator>/<denominator>". */
-    private static final Pattern FRACTION_PATTERN = Pattern.compile("^(-?\\d+)(?:/(-?\\d+))?$");
-
-    /** Matches strings of the form "<integer-part>.<fractional_part>" or "<integer-part>.<fractional_part>_<repeating-fractional-part>". */
-    private static final Pattern DECIMAL_PATTERN = Pattern.compile("^(-?\\d+)\\.(\\d*?)(?:0*|_(\\d*)?)$"); // NOSONAR
 
     /**
      * Creates an integer Rational from the given integer.
@@ -301,57 +293,145 @@ public class Rational extends Number implements Comparable<Rational> {
      * @since 1.0.0
      */
     public static Rational of(String string) {
-        Matcher matcher = FRACTION_PATTERN.matcher(string);
-        if (matcher.matches()) {
-            if (matcher.group(2) != null) {
-                return Rational.of(new BigInteger(matcher.group(1)), new BigInteger(matcher.group(2)));
-            } else {
-                return Rational.of(new BigInteger(matcher.group(1)));
-            }
+        int len = string.length();
+        if (len == 0) {
+            throw new IllegalArgumentException("Missing number");
         }
 
-        matcher = DECIMAL_PATTERN.matcher(string);
+        int i = 0;
 
-        if (matcher.matches()) {
-            int fixedLength = matcher.group(2).length();
-            int repeatingLength = matcher.group(3) != null ? matcher.group(3).length() : 0;
-            if (repeatingLength > 0) {
-                if (fixedLength == 0) {
-                    // no fixed but repeating decimal digits
-                    BigInteger repeatingDenominator = BigInteger.TEN.pow(repeatingLength).subtract(BigInteger.ONE);
-                    Rational fixedRational = Rational.of(new BigInteger(matcher.group(1)));
-                    Rational repeatingRational = Rational.of(new BigInteger(matcher.group(3)), repeatingDenominator);
-                    // we need subtraction for a negative zero (e.g. "-0._123")
-                    if (fixedRational.signum() >= 0 && !string.startsWith("-")) {
-                        return fixedRational.add(repeatingRational);
-                    } else {
-                        return fixedRational.subtract(repeatingRational);
-                    }
-                } else {
-                    // fixed and repeating decimal digits
-                    String str = matcher.group(1) + matcher.group(2);
-                    BigInteger fixedDenominator = BigInteger.TEN.pow(fixedLength);
-                    BigInteger repeatingDenominator = BigInteger.TEN.pow(repeatingLength).subtract(BigInteger.ONE).multiply(fixedDenominator);
-                    Rational fixedRational = Rational.of(new BigInteger(str), fixedDenominator);
-                    Rational repeatingRational = Rational.of(new BigInteger(matcher.group(3)), repeatingDenominator);
-                    if (fixedRational.signum() >= 0) {
-                        return fixedRational.add(repeatingRational);
-                    } else {
-                        return fixedRational.subtract(repeatingRational);
+        for (; i < len; i++) {
+            char c = string.charAt(i);
+            switch (c) {
+            case '-': // NOSONAR
+                if (i != 0) {
+                    throw new IllegalArgumentException("Minus sign in unexpected location");
+                }
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                break;
+            case '/':
+                i++;
+                int denominatorStart = i;
+                boolean firstDenominatorCharacter = true;
+
+                for (; i < len; i++) {
+                    c = string.charAt(i);
+                    switch (c) {
+                    case '-': // NOSONAR
+                        if (firstDenominatorCharacter) {
+                            firstDenominatorCharacter = false;
+                        } else {
+                            throw new IllegalArgumentException("Minus sign in unexpected location");
+                        }
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unexpected character \"" + c + "\"");
                     }
                 }
-            } else if (fixedLength == 0) {
-                // no fixed and no repeating decimal digits
-                return Rational.of(new BigInteger(matcher.group(1)));
-            } else {
-                // fixed but no repeating decimal digits
-                String str = matcher.group(1) + matcher.group(2);
-                BigInteger fixedDenominator = BigInteger.TEN.pow(fixedLength);
-                return Rational.of(new BigInteger(str), fixedDenominator);
+
+                if (i == denominatorStart) {
+                    throw new IllegalArgumentException("Missing denominator");
+                }
+
+                return Rational.of(new BigInteger(string.substring(0, denominatorStart - 1)), new BigInteger(string.substring(denominatorStart)));
+            case '.':
+                i++;
+                int decimalStart = i;
+                int trailingZeros = 0;
+                for (; i < len; i++) {
+                    c = string.charAt(i);
+                    switch (c) {
+                    case '0':
+                        trailingZeros++;
+                        break;
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        trailingZeros = 0;
+                        break;
+                    case '_':
+                        i++;
+                        if (i == len) {
+                            BigInteger denominator = BigInteger.TEN.pow(len - decimalStart - 1 - trailingZeros);
+                            return Rational.of(
+                                    new BigInteger(string.substring(0, decimalStart - 1) + string.substring(decimalStart, len - 1 - trailingZeros)),
+                                    denominator);
+                        }
+                        int repeatingDecimalStart = i;
+                        for (; i < len; i++) {
+                            c = string.charAt(i);
+                            switch (c) {
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                            case '8':
+                            case '9':
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unexpected character \"" + c + "\"");
+                            }
+                        }
+
+                        BigInteger denominator = BigInteger.TEN.pow(repeatingDecimalStart - 1 - decimalStart);
+                        if (string.charAt(0) == '-') {
+                            return Rational
+                                    .of(new BigInteger(
+                                            string.substring(0, decimalStart - 1) + string.substring(decimalStart, repeatingDecimalStart - 1)),
+                                            denominator)
+                                    .subtract(Rational.of(new BigInteger(string.substring(repeatingDecimalStart)),
+                                            BigInteger.TEN.pow(len - repeatingDecimalStart).subtract(BI_ONE).multiply(denominator)));
+                        } else {
+                            return Rational
+                                    .of(new BigInteger(
+                                            string.substring(0, decimalStart - 1) + string.substring(decimalStart, repeatingDecimalStart - 1)),
+                                            denominator)
+                                    .add(Rational.of(new BigInteger(string.substring(repeatingDecimalStart)),
+                                            BigInteger.TEN.pow(len - repeatingDecimalStart).subtract(BI_ONE).multiply(denominator)));
+                        }
+                    default:
+                        throw new IllegalArgumentException("Unexpected character \"" + c + "\"");
+                    }
+                }
+
+                BigInteger denominator = BigInteger.TEN.pow(len - decimalStart - trailingZeros);
+                return Rational.of(new BigInteger(string.substring(0, decimalStart - 1) + string.substring(decimalStart, len - trailingZeros)),
+                        denominator);
+            default:
+                throw new IllegalArgumentException("Unexpected character \"" + c + "\"");
             }
-        } else {
-            throw new IllegalArgumentException("Invalid syntax: \"" + string + "\"");
         }
+
+        return Rational.of(new BigInteger(string));
     }
 
     /**
