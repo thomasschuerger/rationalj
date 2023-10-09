@@ -299,14 +299,17 @@ public class Rational extends Number implements Comparable<Rational> {
         }
 
         int i = 0;
+        boolean negative = false;
 
         for (; i < len; i++) {
             char c = string.charAt(i);
             switch (c) {
-            case '-': // NOSONAR
+            case '-':
                 if (i != 0) {
                     throw new IllegalArgumentException("Minus sign in unexpected location");
                 }
+                negative = true;
+                break;
             case '0':
             case '1':
             case '2':
@@ -319,8 +322,7 @@ public class Rational extends Number implements Comparable<Rational> {
             case '9':
                 break;
             case '/':
-                i++;
-                int denominatorStart = i;
+                int denominatorStart = ++i;
                 boolean firstDenominatorCharacter = true;
 
                 for (; i < len; i++) {
@@ -332,6 +334,7 @@ public class Rational extends Number implements Comparable<Rational> {
                         } else {
                             throw new IllegalArgumentException("Minus sign in unexpected location");
                         }
+                        break;
                     case '0':
                     case '1':
                     case '2':
@@ -354,8 +357,7 @@ public class Rational extends Number implements Comparable<Rational> {
 
                 return Rational.of(new BigInteger(string.substring(0, denominatorStart - 1)), new BigInteger(string.substring(denominatorStart)));
             case '.':
-                i++;
-                int decimalStart = i;
+                int decimalStart = ++i;
                 int trailingZeros = 0;
                 for (; i < len; i++) {
                     c = string.charAt(i);
@@ -377,10 +379,9 @@ public class Rational extends Number implements Comparable<Rational> {
                     case '_':
                         i++;
                         if (i == len) {
-                            BigInteger denominator = BigInteger.TEN.pow(len - decimalStart - 1 - trailingZeros);
                             return Rational.of(
                                     new BigInteger(string.substring(0, decimalStart - 1) + string.substring(decimalStart, len - 1 - trailingZeros)),
-                                    denominator);
+                                    BigInteger.TEN.pow(len - decimalStart - 1 - trailingZeros));
                         }
                         int repeatingDecimalStart = i;
                         for (; i < len; i++) {
@@ -403,21 +404,12 @@ public class Rational extends Number implements Comparable<Rational> {
                         }
 
                         BigInteger denominator = BigInteger.TEN.pow(repeatingDecimalStart - 1 - decimalStart);
-                        if (string.charAt(0) == '-') {
-                            return Rational
-                                    .of(new BigInteger(
-                                            string.substring(0, decimalStart - 1) + string.substring(decimalStart, repeatingDecimalStart - 1)),
-                                            denominator)
-                                    .subtract(Rational.of(new BigInteger(string.substring(repeatingDecimalStart)),
-                                            BigInteger.TEN.pow(len - repeatingDecimalStart).subtract(BI_ONE).multiply(denominator)));
-                        } else {
-                            return Rational
-                                    .of(new BigInteger(
-                                            string.substring(0, decimalStart - 1) + string.substring(decimalStart, repeatingDecimalStart - 1)),
-                                            denominator)
-                                    .add(Rational.of(new BigInteger(string.substring(repeatingDecimalStart)),
-                                            BigInteger.TEN.pow(len - repeatingDecimalStart).subtract(BI_ONE).multiply(denominator)));
-                        }
+                        Rational fixed = Rational.of(
+                                new BigInteger(string.substring(0, decimalStart - 1) + string.substring(decimalStart, repeatingDecimalStart - 1)),
+                                denominator);
+                        Rational repeating = Rational.of(new BigInteger(string.substring(repeatingDecimalStart)),
+                                BigInteger.TEN.pow(len - repeatingDecimalStart).subtract(BI_ONE).multiply(denominator));
+                        return negative ? fixed.subtract(repeating) : fixed.add(repeating);
                     default:
                         throw new IllegalArgumentException("Unexpected character \"" + c + "\"");
                     }

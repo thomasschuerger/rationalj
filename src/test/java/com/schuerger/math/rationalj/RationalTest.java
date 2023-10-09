@@ -87,6 +87,7 @@ class RationalTest {
         assertEquals(Rational.of(-3), Rational.of("-3._"));
         assertEquals(Rational.of(-31, 10), Rational.of("-3.1_"));
         assertEquals(Rational.of(120296611, 2499750), Rational.of("48.123_4567"));
+        assertEquals(Rational.of(1212, 25), Rational.of("48.48000_"));
         assertEquals(Rational.of(-274348422475994513L, 277777777750000L), Rational.of("-987.6543210_1234567890"));
         assertEquals(Rational.of(1234567890123456789L, 100000000000000L), Rational.of("12345.67890123456789"));
         assertEquals(Rational.of(-1234567890123456789L, 100000000000000L), Rational.of("-12345.67890123456789"));
