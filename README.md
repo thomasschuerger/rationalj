@@ -9,7 +9,7 @@ Rational numbers are implemented by the class `Rational`, which extends `Number`
 Upon creation, `Rational`s are automatically brought into canonical form:
 
 - numerators and denominators are always made coprime (making the `Rational` fully reduced)
-- if denominators are negative, the signs of the numerators and denominators are switched each
+- if denominators are negative, the signs of the numerators and denominators are switched so that the sign is in the numerator
 - zero uses a numerator of 0 and a denominator of 1 
 
 Therefore, two `Rational`s are equal if and only if their numerators are equal and their denominators are equal. Working in canonical form makes sure that computations use smaller numbers and allows for certain optimizations.
@@ -185,14 +185,14 @@ to do the same, but skipping the execution of unit tests.
 <dependency>
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
 ## Gradle
 
 ```gradle
-implementation 'com.schuerger.math:rationalj:1.3.0'
+implementation 'com.schuerger.math:rationalj:1.4.0'
 ```
 
 # Examples

@@ -7,12 +7,12 @@
 
     <groupId>com.schuerger.math</groupId>
     <artifactId>rationalj</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <packaging>jar</packaging>
     <name>RationalJ</name>
     <description>A lightweight Java library for rational number arithmetic</description>
     <url>https://github.com/thomasschuerger/rationalj</url>
-    <inceptionYear>2022</inceptionYear>
+    <inceptionYear>2021</inceptionYear>
 
     <licenses>
         <license>
