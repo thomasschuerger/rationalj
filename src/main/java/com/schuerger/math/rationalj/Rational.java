@@ -279,10 +279,10 @@ public class Rational extends Number implements Comparable<Rational> {
     }
 
     /**
-     * Returns a Rational based on the given string. The string can either be provided in the form "<integer>", "<numerator>/<denominator>",
-     * "<integer-part>.<fractional-part>" or "<integer-part>".<fractional-part>_<repeating-fractional-part>". The fractional part and/or the repeating
-     * fractional part can also be empty. Any part, except the fractional part and the repeating fractional part, can be negated by prepending it with
-     * a "-".
+     * Returns a Rational based on the given string. The string can either be provided in the form "&lt;integer&gt;",
+     * "&lt;numerator&gt;/&lt;denominator&gt;", "&lt;integer-part&gt;.&lt;fractional-part&gt;" or
+     * "&lt;integer-part&gt;".&lt;fractional-part&gt;_&lt;repeating-fractional-part&gt;". The fractional part and/or the repeating fractional part can
+     * also be empty. Any part, except the fractional part and the repeating fractional part, can be negated by prepending it with a "-".
      *
      * @param string the string
      *
