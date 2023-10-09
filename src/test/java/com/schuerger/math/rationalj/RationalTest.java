@@ -54,6 +54,7 @@ class RationalTest {
         assertThrows(IllegalArgumentException.class, () -> Rational.of("123,456"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.567#5a"));
         assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.567_123+4"));
+        assertThrows(IllegalArgumentException.class, () -> Rational.of("-123.-567"));
 
         assertEquals(Rational.of(0), Rational.of("0"));
         assertEquals(Rational.of(-1), Rational.of("-1"));
