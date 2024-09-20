@@ -251,8 +251,15 @@ class RationalTest {
         assertEquals(Rational.ZERO, Rational.ZERO.square());
         assertEquals(Rational.ONE, Rational.ONE.square());
         assertEquals(Rational.ONE, Rational.of(-1).square());
+        assertEquals(Rational.of(4), Rational.of(2).square());
+        assertEquals(Rational.of(18671041), Rational.of(4321).square());
+        assertEquals(Rational.of(1024), Rational.of(32).square());
+        assertEquals(Rational.of(49), Rational.of(-7).square());
+        assertEquals(Rational.of(256), Rational.of(-16).square());
         assertEquals(Rational.of(169, 36), Rational.of(13, 6).square());
+        assertEquals(Rational.of(1849, 81), Rational.of(43, 9).square());
         assertEquals(Rational.of(169, 36), Rational.of(-13, 6).square());
+        assertEquals(Rational.of(289, 25), Rational.of(17, -5).square());
     }
 
     @Test
@@ -573,6 +580,20 @@ class RationalTest {
         assertEquals(Rational.of(-4), Rational.of(-22, 6).round());
         assertEquals(Rational.of(-4), Rational.of(-23, 6).round());
         assertEquals(Rational.of(-4), Rational.of(-24, 6).round());
+    }
+
+    @Test
+    void testFrac() {
+        assertEquals(Rational.of("0"), Rational.of("0").frac());
+        assertEquals(Rational.of("0"), Rational.of("197").frac());
+        assertEquals(Rational.of("0"), Rational.of("-331").frac());
+        assertEquals(Rational.of("0.331579205"), Rational.of("0.331579205").frac());
+        assertEquals(Rational.of("0.331579205"), Rational.of("7.331579205").frac());
+        assertEquals(Rational.of("0.9834953498"), Rational.of("65437.9834953498").frac());
+        assertEquals(Rational.of("0.331579205"), Rational.of("-7.331579205").frac());
+        assertEquals(Rational.of("0.5_451"), Rational.of("3.5_451").frac());
+        assertEquals(Rational.of("0.727_887992301"), Rational.of("-123.727_887992301").frac());
+        assertEquals(Rational.of("0.49834985934958019893449683494"), Rational.of("-689459865.49834985934958019893449683494").frac());
     }
 
     @Test
@@ -962,6 +983,28 @@ class RationalTest {
     }
 
     @Test
+    void testLn778_777ths() {
+        // approximate ln(778/777) to 1000 decimal digits using ln((n+1)/n) = 2(1/(2n+1)+1/(3(2n+1)^3)+1/(5(2n+1)^5)+...)
+
+        Rational n = Rational.of(777);
+        Rational sum = Rational.ZERO;
+        Rational k = Rational.ONE;
+        Rational f = n.redouble().add(Rational.ONE); // 1/(2n+1)
+        Rational f2 = f.multiply(f); // f2 = 1/(2n+1)^2
+
+        for (int i = 1; i <= 156; i++) {
+            sum = sum.add(k.multiply(f).reciprocal());
+            k = k.add(Rational.TWO);
+            f = f.multiply(f2);
+        }
+        sum = sum.redouble();
+
+        assertEquals(Rational.of(
+                "474014012198368603280054701127731866680745898602480987791646714490892603997543015991717740578285466392411565997743980779531516150681759281543349620740474564284680134342054757616703859675926222252627391792099122288253543671120213122088530388157165539363673491756165415113047394357464915443985966148111102806091498059024292397280886998699179837456310094487618288552471040732166769231807436520748790359348694297748551164183502518371124280891305439398165858868321195390672859188043391319470858727724232568138593445011219334025093241613854495036153979768922454325368333664642057190397577970168687325587845446230400618000992440046582865029906895208188862711068662056740994161658910316464454032875692631685756879025097150658074933979533846465570103620297287971116837910807341071635457343919529637046772408129344989927420728272163592432138131862564731298037654465801841797156408041000253308448808765136696191294957843351391511637376246212507477109789421169144639745115520239688498224659859641328228909342986321459246192171857699952417516578090874871582025781222002343215060392276810007438097802136910170738421509997790271717248/368545843678865621848540714799306595913581869398901082628865958408303088317194126902577431917912146027035093843935885872461460762270351743407209436943884275617966641932141490012168235557643910151047318030064287446322876708483467352664187070511155412349128279654679094139756065443671719136641898432263363391704776975326761836587265839272671642072232911464790836334535428291835989659187605300913933884863257722389159565964980595026542849478901188794325504695757958435718668419402274887198072177052058757395720611453960912145305119627980721522981522431460795149965252530050574787937501655079102115685275375351606444940465571867548592051045710428780565547073711727572058578776265215452415549704652986229200060678589465559571081504563945952255616041157198224877029091905029102838836733775486722260452990925644594736798339940226096591797720127371313489097285527305663655737915417040264959804727851464900692915488567477347438375877416181299707258531816106886103774145986760113656813366101715202415558778651070732988269860264259869219957509982761707350208508130523786616460325103696019284106599744887944325455464422702789306640625"),
+                sum);
+    }
+
+    @Test
     void testSqrt2() {
         // approximate sqrt(2) starting from 1 using 10 Newton-Raphson iterations
 
@@ -1046,6 +1089,23 @@ class RationalTest {
         assertEquals(Rational.of(
                 "7291993184377412737043195648396979558721167948342308637716205818587400148912186579874409368754354848994831816250311893410648104792440789475340471377366852420526027975140687031196633477605718294523235826853392138525/4506699633677819813104383235728886049367860596218604830803023149600030645708721396248792609141030396244873266580345011219530209367425581019871067646094200262285202346655868899711089246778413354004103631553925405243"),
                 x);
+    }
+
+    @Test
+    void testGamma() {
+        // approximate gamma (the Euler-Mascheroni constant) via numerical integration, using gamma = 1 - integral(frac(1/x),x=0..1)
+        // this converges very slowly and is unstable (more iterations can mean less accuracy), so we only compute 3 decimal digits
+
+        Rational step = Rational.ofReciprocal(972);
+        Rational x = step.halve();
+        Rational sum = Rational.ZERO;
+        while (x.compareTo(Rational.ONE) < 0) {
+            sum = sum.add(x.reciprocal().frac());
+            x = x.add(step);
+        }
+
+        sum = Rational.ONE.subtract(sum.multiply(step));
+        assertEquals("0.577", sum.toDecimal(3, RoundingMode.DOWN).toString());
     }
 
     @Test
@@ -1234,6 +1294,33 @@ class RationalTest {
         }
 
         return sum.multiply(Rational.of(4)).toDecimal(digits, RoundingMode.DOWN).toString();
+    }
+
+    /**
+     * Calculates exp(x) to the given number of decimal places.
+     *
+     * @param x the argument
+     * @param decimalPlaces the number of decimal places
+     *
+     * @return exp(x)
+     */
+    private Rational exp(Rational x, int decimalPlaces) {
+        // uses exp(x) = 1 + x + x^2/2! + x^3/3! + x^4/4! + ...
+
+        Rational sum = Rational.ONE.add(x);
+        Rational f = x.square();
+        Rational fac = Rational.TWO;
+
+        for (int i = 3;; i++) {
+            Rational newSum = sum.add(f.divide(fac));
+            if (newSum.toInteger().equals(sum.toInteger()) && newSum.frac().toDecimal(decimalPlaces + 1, RoundingMode.HALF_DOWN).toString()
+                    .equals(sum.frac().toDecimal(decimalPlaces + 1, RoundingMode.HALF_DOWN).toString())) {
+                return newSum;
+            }
+            sum = newSum;
+            fac = fac.multiply(Rational.of(i));
+            f = f.multiply(x);
+        }
     }
 
     /**
